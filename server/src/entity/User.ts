@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
-import {ObjectType, Field, ID, Root} from "type-graphql";
-import { Todo } from "./Todo";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, CreateDateColumn } from 'typeorm'
+import { ObjectType, Field, ID, Root } from 'type-graphql'
+import { Todo } from './Todo'
 
 @ObjectType()
 @Entity()
@@ -18,18 +18,22 @@ export class User extends BaseEntity {
   lastName: string;
 
   @Field()
-  @Column("varchar", { unique: true, length: 255 })
+  @Column('varchar', { unique: true, length: 255 })
   email: string;
 
   @Field()
-  name(@Root() parent: User): string {
-    return `${parent.firstName} ${parent.lastName}`;
+  name (@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`
   }
+
+  @Field()
+  @CreateDateColumn()
+  registeredAt: Date
 
   @Column()
   password: string;
 
-  @Column("bool", {default: false})
+  @Column('bool', { default: false })
   confirmed: boolean;
 
   @Field(() => [Todo])

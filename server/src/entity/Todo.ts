@@ -1,18 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from "typeorm";
-import {ObjectType, Field, ID, Int, Root, registerEnumType} from "type-graphql";
-import { User } from "./User";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from 'typeorm'
+import { ObjectType, Field, ID, Int, Root, registerEnumType } from 'type-graphql'
+import { User } from './User'
 
 export enum Role {
-  GUEST = "guest",
-  ADMIN = "admin",
-  TUTOR = "tutor"
+  GUEST = 'guest',
+  ADMIN = 'admin',
+  TUTOR = 'tutor'
 }
 
 registerEnumType(Role, {
-  name: "Role",
-  description: "user Role type"
+  name: 'Role',
+  description: 'user Role type'
 })
-
 
 @ObjectType()
 @Entity()
@@ -23,7 +22,7 @@ export class Todo extends BaseEntity {
 
   @Field(() => Role)
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Role,
     default: Role.GUEST
   })
@@ -35,8 +34,8 @@ export class Todo extends BaseEntity {
 
   @Field()
   @Column({
-    type: "text",
-    default: "",
+    type: 'text',
+    default: ''
   })
   description: string;
 
@@ -44,12 +43,12 @@ export class Todo extends BaseEntity {
   @Column({ default: false })
   isCompleted: boolean;
 
-  @Field(() => User, {nullable: true})
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.todos)
   user: User
 
   @Field(() => Int)
-  userId(@Root() parent: Todo): number {
-    return parent.user.id;
+  userId (@Root() parent: Todo): number {
+    return parent.user.id
   }
 }
