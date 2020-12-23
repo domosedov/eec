@@ -26,7 +26,7 @@ export class RegisterResolver {
         @Ctx() ctx: AppContext,
         @Arg('data') { email, login, password }: RegisterInput
     ): Promise<User> {
-      const hashedPassword = await bcrypt.hash(password, 12)
+      const hashedPassword = await bcrypt.hash(password, 10)
 
       const user = await User.create({
         login,
