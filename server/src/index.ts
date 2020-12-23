@@ -2,7 +2,7 @@ import "reflect-metadata";
 import "dotenv-safe/config";
 import {ApolloServer} from "apollo-server-express";
 import express from "express";
-import {createConnection} from "typeorm";
+import {createConnection, getConnection} from "typeorm";
 import session from "express-session"
 import connectRedis from "connect-redis"
 import cors from "cors"
@@ -11,9 +11,10 @@ import {createSchema} from "./utils/createSchema";
 import {graphqlUploadExpress} from "graphql-upload";
 import path from "path";
 import {User} from "./entity/User";
-import {__prod__, COOKIE_NAME} from "./constants";
+import {__prod__, COOKIE_NAME, PUBLIC_DIR, ROOT_DIR, UPLOADS_DIR} from "./constants";
 import Redis from "ioredis";
-import {Role, Todo} from "./entity/Todo";
+import {Todo} from "./entity/Todo";
+import up from "./seed";
 
 const main = async () => {
     await createConnection({
@@ -21,66 +22,19 @@ const main = async () => {
         type: "postgres",
         url: process.env.DATABASE_URL,
         synchronize: true,
-        logging: true,
+        logging: false,
         dropSchema: true,
         entities: [User, Todo]
     });
 
-    const user1 = await User.create({
-        firstName: "Alex",
-        lastName: "Grig",
-        email: "domosed0",
-        password: "2001"
-    }).save()
+    await up();
 
-    await User.create({
-      firstName: "Sonya",
-      lastName: "Grig",
-      email: "domosed1",
-      password: "2001",
-    }).save();
-
-    await User.create({
-      firstName: "Vlad",
-      lastName: "Grig",
-      email: "domosed2",
-      password: "2001",
-    }).save();
-
-    console.log(user1)
-
-    await Todo.create({
-        title: 'todo 1',
-        description: 'desc 1',
-        user: {
-            id: 1
+    console.log(await Todo.findAndCount({
+        where: {
+            isCompleted: false
         },
-        role: Role.ADMIN
-    }).save();
-
-    await Todo.create({
-      title: "todo 2",
-      description: "desc 1",
-      user: {
-        id: 1,
-      }
-    }).save();
-
-    await Todo.create({
-      title: "todo 3",
-      description: "desc 1",
-      user: {
-        id: 2,
-      },
-    }).save();
-
-    await Todo.create({
-      title: "todo 4",
-      description: "desc 1",
-      user: {
-        id: 3,
-      },
-    }).save();
+        skip: 2
+    }))
 
     const app = express();
     const RedisStore = connectRedis(session);
@@ -148,4 +102,11 @@ const main = async () => {
 
 };
 
-main().catch(err => console.error(err));
+main().catch(err => console.error(err)).finally(async () => {
+    console.log("Close connection")
+    await getConnection().close();
+});
+
+console.log("Root", ROOT_DIR);
+console.log("Public", PUBLIC_DIR);
+console.log("Uploads", UPLOADS_DIR);

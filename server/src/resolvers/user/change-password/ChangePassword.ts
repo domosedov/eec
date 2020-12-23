@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 import {User} from "../../../entity/User";
 import {ChangePasswordInput} from "../../../inputs/ChangePasswordInput";
 import {MyContext} from "../../../types/MyContext";
-import {forgotPasswordPrefix} from "../../../constants";
+import {REDIS_PREFIX_FORGOT_PASSWORD} from "../../../constants";
 
 @Resolver()
 export class ChangePasswordResolver {
@@ -17,7 +17,7 @@ export class ChangePasswordResolver {
         @Ctx() ctx: MyContext
     ): Promise<User | null> {
 
-        const userId = await ctx.redis.get(forgotPasswordPrefix + token);
+        const userId = await ctx.redis.get(REDIS_PREFIX_FORGOT_PASSWORD + token);
 
         console.log(userId)
 
@@ -27,7 +27,7 @@ export class ChangePasswordResolver {
 
         if (!user) return null;
 
-        await ctx.redis.del(forgotPasswordPrefix + token);
+        await ctx.redis.del(REDIS_PREFIX_FORGOT_PASSWORD + token);
 
         user.password = await bcrypt.hash(password, 12);
 
