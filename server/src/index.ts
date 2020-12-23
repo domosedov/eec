@@ -11,7 +11,7 @@ import { createSchema } from './utils/createSchema'
 import { graphqlUploadExpress } from 'graphql-upload'
 import path from 'path'
 import { User } from './entity/User'
-import { __prod__, COOKIE_NAME, PUBLIC_DIR, ROOT_DIR, UPLOADS_DIR } from './constants'
+import { __prod__, COOKIE_NAME } from './constants'
 import Redis from 'ioredis'
 import up from './seed'
 
@@ -28,16 +28,10 @@ const main = async () => {
 
   await up()
 
-  console.log(await User.findAndCount({
-    where: {
-      isBanned: true
-    }
-  }))
-
   const app = express()
   const RedisStore = connectRedis(session)
   const redis = new Redis(process.env.REDIS_URL)
-  const port = process.env.PORT
+  const PORT = process.env.PORT
   const schema = await createSchema()
 
   if (__prod__) {
@@ -80,7 +74,8 @@ const main = async () => {
     schema,
     context: ({ req, res }) => ({ req, res, redis }),
     introspection: !__prod__,
-    uploads: false
+    uploads: false,
+    playground: !__prod__ ? { settings: { 'request.credentials': 'include' } } : undefined
   })
 
   app.get('/', (_, res) => {
@@ -94,13 +89,9 @@ const main = async () => {
 
   apolloServer.applyMiddleware({ app, cors: false })
 
-  app.listen(parseInt(port), () => {
-    console.log(`server started on http://localhost:${port}/graphql`)
+  app.listen(parseInt(PORT), () => {
+    console.log(`server started on http://localhost:${PORT}/graphql`)
   })
 }
 
 main().catch(err => console.error(err))
-
-console.log('Root', ROOT_DIR)
-console.log('Public', PUBLIC_DIR)
-console.log('Uploads', UPLOADS_DIR)
