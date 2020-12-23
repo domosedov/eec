@@ -13,21 +13,25 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+"""
+A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+"""
+scalar EmailAddress
+
 type Mutation {
   changePassword(data: ChangePasswordInput!): User
   confirmUser(token: String!): Boolean!
   createJopa(data: RegisterInput!): User!
-  createTodo(description: String!, role: Role!, title: String!): Todo!
   forgotPassword(email: String!): Boolean!
-  login(email: String!, password: String!): User
+  login(loginOrEmail: String!, password: String!): User
   logout: Boolean
   register(data: RegisterInput!): User!
   uploadFile(file: Upload!): Boolean!
 }
 
 type Query {
-  allTodos: [Todo!]
-  getUserById(id: ID!): User!
+  getAllUsers: [User!]!
+  getUserById(id: ID!): User
   hello: String!
   helloWorld: String!
   me: User
@@ -35,8 +39,7 @@ type Query {
 
 input RegisterInput {
   email: String!
-  firstName: String!
-  lastName: String!
+  login: String!
   password: String!
 }
 
@@ -47,25 +50,13 @@ enum Role {
   TUTOR
 }
 
-type Todo {
-  description: String!
-  id: ID!
-  isCompleted: Boolean!
-  role: Role!
-  title: String!
-  user: User
-  userId: Int!
-}
-
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User {
-  email: String!
-  firstName: String!
+  email: EmailAddress!
   id: ID!
-  lastName: String!
-  name: String!
+  login: String!
   registeredAt: DateTime!
-  todos: [Todo!]!
+  role: Role!
 }

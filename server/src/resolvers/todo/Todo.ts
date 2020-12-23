@@ -1,4 +1,4 @@
-import { Role, Todo } from '../../entity/Todo'
+import { Todo } from '../../entity/Todo'
 import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 
 @Resolver(() => Todo)
@@ -17,13 +17,11 @@ export class TodoResolver {
   @Mutation(() => Todo)
   async createTodo (
       @Arg('title') title: string,
-      @Arg('description') description: string,
-      @Arg('role', () => Role) role: Role
+      @Arg('description') description: string
   ) {
     return await Todo.create({
       title,
-      description,
-      role
+      description
     }).save()
   }
 

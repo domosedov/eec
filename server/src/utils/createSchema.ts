@@ -6,7 +6,7 @@ export const createSchema = () => buildSchema({
   authChecker: ({ context: { req } }) => {
     return !!req.session!.userId
   },
-  validate: false,
+  // validate: false,
   dateScalarMode: 'isoDate',
   emitSchemaFile: true
 })

@@ -1,8 +1,8 @@
-import {InputType, ClassType, Field} from 'type-graphql'
+import { InputType, ClassType, Field } from 'type-graphql'
 
 export const MyMixinInput = <T extends ClassType>(BaseClass: T) => {
     @InputType()
-    class MyInput extends BaseClass {
+  class MyInput extends BaseClass {
         @Field()
         testField: boolean
     }

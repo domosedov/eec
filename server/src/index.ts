@@ -13,7 +13,6 @@ import path from 'path'
 import { User } from './entity/User'
 import { __prod__, COOKIE_NAME, PUBLIC_DIR, ROOT_DIR, UPLOADS_DIR } from './constants'
 import Redis from 'ioredis'
-import { Todo } from './entity/Todo'
 import up from './seed'
 
 const main = async () => {
@@ -24,12 +23,16 @@ const main = async () => {
     synchronize: true,
     logging: false,
     dropSchema: true,
-    entities: [User, Todo]
+    entities: [User]
   })
 
   await up()
 
-  console.log(await User.findAndCount())
+  console.log(await User.findAndCount({
+    where: {
+      isBanned: true
+    }
+  }))
 
   const app = express()
   const RedisStore = connectRedis(session)
