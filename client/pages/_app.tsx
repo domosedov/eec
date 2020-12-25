@@ -2,12 +2,18 @@ import { AppProps } from "next/app";
 import { ThemeProvider as DarkThemeProvider } from "next-themes";
 import "../styles/tailwind.css";
 import "focus-visible";
+import {ApolloProvider} from '@apollo/client'
+import {useApollo} from "../lib/apolloClient";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
+    const apolloClient = useApollo(pageProps.initialApolloState)
+
   return (
-    <DarkThemeProvider attribute="class">
-      <Component {...pageProps} />
-    </DarkThemeProvider>
+      <ApolloProvider client={apolloClient}>
+          <DarkThemeProvider attribute="class">
+              <Component {...pageProps} />
+          </DarkThemeProvider>
+      </ApolloProvider>
   );
 }
 
