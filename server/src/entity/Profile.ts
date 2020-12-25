@@ -9,25 +9,25 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
-  OneToMany,
-} from "typeorm";
-import { City } from "./City";
-import { Gender } from "./Enums";
-import { Mark } from "./Mark";
-import { Metro } from "./Metro";
-import { Place } from "./Place";
-import { Status } from "./Status";
-import { Student } from "./Student";
-import { Subject } from "./Subject";
-import { User } from "./_User";
-import { Vacancy } from "./Vacancy";
+  OneToMany
+} from 'typeorm'
+import { City } from './City'
+import { Gender } from './Enums'
+import { Mark } from './Mark'
+import { Metro } from './Metro'
+import { Place } from './Place'
+import { Status } from './Status'
+import { Student } from './Student'
+import { Subject } from './Subject'
+import { User } from './User'
+import { Vacancy } from './Vacancy'
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    default: "f",
+    default: 'f'
   })
   isOpen: boolean;
 
@@ -47,19 +47,19 @@ export class Profile {
   careerStartYear: number;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Gender,
-    default: Gender.NONE,
+    default: Gender.NONE
   })
   gender: Gender;
 
   @Column({
-    default: "",
+    default: ''
   })
   area: string;
 
   @Column({
-    default: "",
+    default: ''
   })
   description: string;
 
@@ -76,8 +76,8 @@ export class Profile {
   updatedAt: Date;
 
   @OneToOne(() => User, {
-    onDelete: "CASCADE",
-    nullable: false,
+    onDelete: 'CASCADE',
+    nullable: false
   })
   @JoinColumn()
   user: User;

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
-import {ObjectType, Field, ID, Root} from "type-graphql";
-import { Todo } from "./Todo";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn } from 'typeorm'
+import { ObjectType, Field, ID } from 'type-graphql'
+import { GraphQLEmailAddress } from 'graphql-scalars'
+import { Role } from '../resolvers/enums/Role.enum'
 
 @ObjectType()
 @Entity()
@@ -10,31 +11,33 @@ export class User extends BaseEntity {
   id: number;
 
   @Field()
-  @Column()
-  firstName: string;
+  @Column({
+    unique: true
+  })
+  login: string
 
-  @Field()
-  @Column()
-  lastName: string;
-
-  @Field()
-  @Column("varchar", { unique: true, length: 255 })
+  @Field(() => GraphQLEmailAddress)
+  @Column('varchar', { unique: true, length: 255 })
   email: string;
-
-  @Field()
-  name(@Root() parent: User): string {
-    return `${parent.firstName} ${parent.lastName}`;
-  }
 
   @Column()
   password: string;
 
-  @Column("bool", {default: false})
-  confirmed: boolean;
+  @Field()
+  @CreateDateColumn()
+  registeredAt: Date
 
-  @Field(() => [Todo])
-  @OneToMany(() => Todo, todo => todo.user, {
-    eager: true
+  @Field(() => Role)
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.GUEST
   })
-  todos: Todo[]
+  role: Role
+
+  @Column('bool', { default: false })
+  isConfirmed: boolean;
+
+  @Column('bool', { default: false })
+  isBanned: boolean;
 }

@@ -1,10 +1,12 @@
-import {buildSchema} from "type-graphql";
-import resolvers from "../resolvers";
+import { buildSchema } from 'type-graphql'
+import resolvers from '../resolvers'
 
 export const createSchema = () => buildSchema({
-    resolvers,
-    authChecker: ({context: {req}}) => {
-        return !!req.session!.userId;
-    },
-    validate: false
+  resolvers,
+  authChecker: ({ context: { req } }) => {
+    return !!req.session!.userId
+  },
+  // validate: false,
+  dateScalarMode: 'isoDate',
+  emitSchemaFile: true
 })
