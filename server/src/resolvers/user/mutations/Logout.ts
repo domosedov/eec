@@ -16,9 +16,11 @@ export class LogoutResolver {
       return ctx.req.session.destroy(err => {
         if (err) {
           console.log(err)
+          // eslint-disable-next-line prefer-promise-reject-errors
           return reject(false)
         }
 
+        // TODO Добавить домен и путь для удаления кук!!!
         ctx.res.clearCookie('qid')
         return resolve(true)
       })
