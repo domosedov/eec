@@ -6,9 +6,6 @@ import {ApolloClient, InMemoryCache, NormalizedCacheObject} from '@apollo/client
 import {createUploadLink} from "apollo-upload-client"
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
-import {GetServerSidePropsContext} from "next";
-import {setContext} from "@apollo/client/link/context";
-import Cookies from "js-cookie";
 
 const __isBrowser__ = typeof window !== 'undefined'
 
@@ -21,22 +18,9 @@ const httpLink = createUploadLink({
     credentials: "include"
 })
 
-const authLink = setContext((_, {headers}) => {
-  if (__isBrowser__) {
-    let cookies = Cookies.getJSON()
-      console.log("COOKS", cookies)
-  }
-
-  if (headers) {
-      console.log("HEADERS", headers)
-  }
-
-  return {}
-})
-
 const createApolloClient = () => {
     return new ApolloClient({
-        link: authLink.concat(httpLink),
+        link: httpLink,
         cache: new InMemoryCache(),
         ssrMode: !__isBrowser__,
         credentials: "include",
