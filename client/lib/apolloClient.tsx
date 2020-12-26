@@ -6,17 +6,40 @@ import {ApolloClient, InMemoryCache, NormalizedCacheObject} from '@apollo/client
 import {createUploadLink} from "apollo-upload-client"
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import {GetServerSidePropsContext} from "next";
+import {setContext} from "@apollo/client/link/context";
+import Cookies from "js-cookie";
+
+const __isBrowser__ = typeof window !== 'undefined'
 
 let apolloClient: ApolloClient<NormalizedCacheObject>
 
+const httpLink = createUploadLink({
+    uri: process.env.NODE_ENV === "production"
+    ? "https://domosedov-dev.info/graphql"
+    : "http://localhost:8080/graphql",
+    credentials: "include"
+})
+
+const authLink = setContext((_, {headers}) => {
+  if (__isBrowser__) {
+    let cookies = Cookies.getJSON()
+      console.log("COOKS", cookies)
+  }
+
+  if (headers) {
+      console.log("HEADERS", headers)
+  }
+
+  return {}
+})
+
 const createApolloClient = () => {
     return new ApolloClient({
-        link: createUploadLink({
-            uri: process.env.NODE_ENV === 'production' ? 'https://domosedov-dev.info/graphql' : 'http://localhost:8080/graphql',
-        }),
+        link: authLink.concat(httpLink),
         cache: new InMemoryCache(),
-        ssrMode: typeof window === 'undefined',
-        credentials: "include"
+        ssrMode: !__isBrowser__,
+        credentials: "include",
     })
 }
 

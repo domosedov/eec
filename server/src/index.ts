@@ -42,7 +42,7 @@ const main = async () => {
 
   app.use(cors({
     credentials: true,
-    origin: __prod__ ? process.env.CORS_ORIGIN : '*'
+    origin: __prod__ ? process.env.CORS_ORIGIN : 'http://localhost:3000'
   }))
 
   app.use(session(

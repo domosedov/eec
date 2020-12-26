@@ -3,7 +3,7 @@ import Link from "next/link";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import {gql, useQuery} from "@apollo/client";
-import {GetStaticProps} from "next";
+import {GetServerSideProps, GetStaticProps} from "next";
 import {initializeApollo} from "../lib/apolloClient";
 
 const GET_ALL_USERS = gql`
@@ -70,7 +70,7 @@ export default function Home() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-    const apolloClient = initializeApollo();
+    const apolloClient = initializeApollo(undefined);
 
     await apolloClient.query({
         query: GET_ALL_USERS
