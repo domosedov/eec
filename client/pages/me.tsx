@@ -37,11 +37,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const headers = ctx.req.headers;
 
+  console.log(headers);
+
   const query = await apolloClient.query({
     query: ME_QUERY,
     context: {
       headers: {
-        ...headers,
+        cookie: ctx.req.headers.cookie,
       },
     },
   });
