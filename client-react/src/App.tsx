@@ -1,4 +1,5 @@
 import { gql, useQuery, useMutation } from "@apollo/client";
+import Login from "./Login";
 
 const QUERY = gql`
   {
@@ -50,6 +51,8 @@ function App() {
         <input onChange={onChange} type="file" id="my-upload" name="file" />
         <button>Upload</button>
       </form>
+
+      <Login/>
     </div>
   );
 }

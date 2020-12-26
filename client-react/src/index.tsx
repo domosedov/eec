@@ -8,8 +8,9 @@ import { createUploadLink } from "apollo-upload-client";
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: createUploadLink({
-    uri: "http://localhost:8080/graphql",
+    uri: "https://domosedov-dev.info/graphql",
   }),
+    credentials: "include"
 });
 
 ReactDOM.render(
