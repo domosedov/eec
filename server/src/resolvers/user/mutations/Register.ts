@@ -29,8 +29,8 @@ export class RegisterResolver {
       const hashedPassword = await bcrypt.hash(password, 10)
 
       const user = await User.create({
-        login,
-        email,
+        login: login.toLowerCase(),
+        email: email.toLowerCase(),
         password: hashedPassword
       }).save()
 

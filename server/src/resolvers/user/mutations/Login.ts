@@ -20,9 +20,9 @@ export class LoginResolver {
     let user
 
     if (maybeEmail(loginOrEmail)) {
-      user = await User.findOne({ where: { email: loginOrEmail } })
+      user = await User.findOne({ where: { email: loginOrEmail.toLowerCase() } })
     } else {
-      user = await User.findOne({ where: { login: loginOrEmail } })
+      user = await User.findOne({ where: { login: loginOrEmail.toLowerCase() } })
     }
 
     if (!user) return null

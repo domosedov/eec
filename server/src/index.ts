@@ -28,6 +28,15 @@ const main = async () => {
 
   await up()
 
+  const user = await User.findOne({
+    where: {
+      login: 'DOmosed'.toLowerCase()
+
+    }
+  })
+
+  console.log(user)
+
   const app = express()
   const RedisStore = connectRedis(session)
   const redis = new Redis(process.env.REDIS_URL)
