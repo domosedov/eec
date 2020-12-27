@@ -1,3 +1,4 @@
+import { __prod__ } from '../../../constants'
 import {
   Resolver,
   Mutation,
@@ -20,8 +21,17 @@ export class LogoutResolver {
           return reject(false)
         }
 
-        // TODO Добавить домен и путь для удаления кук!!!
-        ctx.res.clearCookie('qid')
+        const options = __prod__
+          ? {
+              domain: process.env.COOKIE_DOMAIN,
+              path: '/'
+            }
+          : {
+              domain: 'localhost',
+              path: '/'
+            }
+
+        ctx.res.clearCookie('qid', options)
         return resolve(true)
       })
     })
