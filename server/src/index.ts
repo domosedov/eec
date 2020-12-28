@@ -5,15 +5,16 @@ import express from 'express'
 import { createConnection } from 'typeorm'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
+import Redis from 'ioredis'
+import path from 'path'
+import { graphqlUploadExpress } from 'graphql-upload'
 import cors from 'cors'
 
 import { createSchema } from './utils/createSchema'
-import { graphqlUploadExpress } from 'graphql-upload'
-import path from 'path'
-import { User } from './entity/User'
-import { __prod__, COOKIE_NAME } from './constants'
-import Redis from 'ioredis'
+import { __prod__, COOKIE_NAME, PUBLIC_DIR } from './constants'
+import entities from './entity'
 import up from './seed'
+import { Profile } from './entity/Profile'
 
 const main = async () => {
   await createConnection({
@@ -23,19 +24,13 @@ const main = async () => {
     synchronize: true,
     logging: false,
     dropSchema: true,
-    entities: [User]
+    entities
   })
 
+  // Run seeds
   await up()
 
-  const user = await User.findOne({
-    where: {
-      login: 'DOmosed'.toLowerCase()
-
-    }
-  })
-
-  console.log(user)
+  console.log(await Profile.findOne({ id: 1 }))
 
   const app = express()
   const RedisStore = connectRedis(session)
@@ -49,10 +44,14 @@ const main = async () => {
 
   app.use(express.static(path.join(__dirname, 'public')))
 
-  app.use(cors({
-    credentials: true,
-    origin: __prod__ ? process.env.CORS_ORIGIN : 'http://localhost:3000'
-  }))
+  app.use(
+    cors({
+      credentials: true,
+      origin: __prod__
+        ? process.env.CORS_ORIGIN
+        : ['http://localhost:3000', 'https://studio.apollographql.com']
+    })
+  )
 
   app.use(session(
     {
@@ -93,7 +92,7 @@ const main = async () => {
       domain: '.domosedov-dev.info',
       maxAge: 100000000
     })
-    res.sendFile(path.join(process.cwd(), 'public', 'index.html'))
+    res.sendFile(path.join(PUBLIC_DIR, 'index.html'))
   })
 
   apolloServer.applyMiddleware({ app, cors: false })

@@ -1,3 +1,4 @@
+import { Role } from '../../enums/Role.enum'
 import { Arg, ID, Query, Resolver } from 'type-graphql'
 import { User } from '../../../entity/User'
 
@@ -9,11 +10,22 @@ export class GetUserResolver {
   }
 
     @Query(() => User, { nullable: true })
-    async getUserById (@Arg('id', () => ID) id: number): Promise<User | null> {
+    async getUserById (@Arg('id', () => ID, {
+      defaultValue: 1
+    }) id: number): Promise<User | null> {
       const user = await User.findOne({ where: { id } })
 
       if (!user) return null
 
       return user
+    }
+
+    @Query(() => [User])
+    async getUsersByRole (@Arg('role', () => Role, { defaultValue: Role.GUEST }) role: Role): Promise<User[]> {
+      const users = await User.find({
+        where: { role }
+      })
+
+      return users
     }
 }

@@ -5,15 +5,15 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinTable,
-  ManyToMany,
-} from "typeorm";
-import { City } from "./City";
-import { Gender } from "./Enums";
-import { Metro } from "./Metro";
-import { Place } from "./Place";
-import { Profile } from "./Profile";
-import { Student } from "./Student";
-import { Subject } from "./Subject";
+  ManyToMany
+} from 'typeorm'
+import { City } from './City'
+import { Gender } from '../resolvers/enums/Gender.enum'
+import { Metro } from './Metro'
+import { Place } from './Place'
+import { Profile } from './Profile'
+import { Student } from './Student'
+import { Subject } from './Subject'
 
 @Entity()
 export class Vacancy {
@@ -21,12 +21,12 @@ export class Vacancy {
   id: number;
 
   @Column({
-    default: "f",
+    default: 'f'
   })
   isOpen: boolean;
 
   @Column({
-    default: "f",
+    default: 'f'
   })
   isCompleted: boolean;
 
@@ -43,19 +43,19 @@ export class Vacancy {
   phone: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Gender,
-    default: Gender.ALL,
+    default: Gender.ALL
   })
   gender: Gender;
 
   @Column({
-    default: "",
+    default: ''
   })
   area: string;
 
   @Column({
-    default: "",
+    default: ''
   })
   description: string;
 

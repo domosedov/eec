@@ -1,3 +1,4 @@
+import { Field, ID, Int, ObjectType } from 'type-graphql'
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,10 +10,11 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
-  OneToMany
+  OneToMany,
+  BaseEntity
 } from 'typeorm'
 import { City } from './City'
-import { Gender } from './Enums'
+import { Gender } from '../resolvers/enums/Gender.enum'
 import { Mark } from './Mark'
 import { Metro } from './Metro'
 import { Place } from './Place'
@@ -21,31 +23,49 @@ import { Student } from './Student'
 import { Subject } from './Subject'
 import { User } from './User'
 import { Vacancy } from './Vacancy'
+
+@ObjectType()
 @Entity()
-export class Profile {
+export class Profile extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({
     default: 'f'
   })
-  isOpen: boolean;
+  isPublished: boolean;
 
+  @Field()
   @Column()
   firstName: string;
 
+  @Field()
   @Column()
   middleName: string;
 
+  @Field()
   @Column()
   lastName: string;
 
+  @Field()
+  @Column()
+  phone: string;
+
+  @Field()
+  @Column()
+  email: string;
+
+  @Field(() => Int)
   @Column()
   birthYear: number;
 
+  @Field(() => Int)
   @Column()
   careerStartYear: number;
 
+  @Field(() => Gender)
   @Column({
     type: 'enum',
     enum: Gender,
@@ -53,19 +73,23 @@ export class Profile {
   })
   gender: Gender;
 
+  @Field(() => String, { nullable: true })
   @Column({
-    default: ''
+    nullable: true
   })
   area: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
-    default: ''
+    nullable: true
   })
   description: string;
 
+  @Field()
   @Column()
   education: string;
 
+  @Field(() => Int)
   @Column()
   hourlyRate: number;
 
@@ -82,38 +106,55 @@ export class Profile {
   @JoinColumn()
   user: User;
 
+  @Field(() => [Subject])
   @ManyToMany(() => Subject, {
     eager: true
   })
   @JoinTable()
   subjects: Subject[];
 
-  @ManyToMany(() => Student)
+  @Field(() => [Student])
+  @ManyToMany(() => Student, {
+    eager: true
+  })
   @JoinTable()
   students: Student[];
 
-  @ManyToMany(() => Place)
+  @Field(() => [Place])
+  @ManyToMany(() => Place, {
+    eager: true
+  })
   @JoinTable()
   places: Place[];
 
-  @ManyToMany(() => Mark)
+  @Field(() => [Mark])
+  @ManyToMany(() => Mark, {
+    eager: true
+  })
   @JoinTable()
   marks: Mark[];
 
+  @Field(() => City)
   @ManyToOne(() => City, (city) => city.profile, {
     eager: true
   })
   city: City;
 
+  @Field(() => Metro)
   @ManyToOne(() => Metro, (metro) => metro.profile, {
     eager: true
   })
   metro: Metro;
 
-  @ManyToOne(() => Status, (status) => status.profile)
+  @Field(() => Status)
+  @ManyToOne(() => Status, (status) => status.profile, {
+    eager: true
+  })
   status: Status;
 
-  @OneToMany(() => Vacancy, (vacancy) => vacancy.selectedProfile)
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.selectedProfile, {
+    eager: true
+  })
   selectedByVacancy: Vacancy;
 
   @OneToMany(() => Vacancy, (vacancy) => vacancy.executorProfile)

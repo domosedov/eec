@@ -1,21 +1,25 @@
+import { Field, ID, ObjectType } from 'type-graphql'
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-} from "typeorm";
-import { Vacancy } from "./Vacancy";
+  BaseEntity
+} from 'typeorm'
+import { Vacancy } from './Vacancy'
+  @ObjectType()
+  @Entity()
+export class Place extends BaseEntity {
+    @Field(() => ID)
+    @PrimaryGeneratedColumn()
+    id: number;
 
-@Entity()
-export class Place {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @Field()
+    @Column({
+      unique: true
+    })
+    name: string;
 
-  @Column({
-    unique: true,
-  })
-  name: string;
-
-  @OneToMany(() => Vacancy, (vacancy) => vacancy.place)
-  vacancy: Vacancy;
+    @OneToMany(() => Vacancy, (vacancy) => vacancy.place)
+    vacancy: Vacancy;
 }
