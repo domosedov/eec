@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { initializeApollo } from "../lib/apolloClient";
+import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
 
 const GET_ALL_USERS = gql`
   query getAllUsers {
@@ -23,7 +24,8 @@ const LOGOUT = gql`
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
-  const [logout, { client }] = useMutation(LOGOUT);
+  // const [logout, { client }] = useMutation(LOGOUT);
+  const [logout, { client }] = useLogoutMutation();
   const { theme, setTheme } = useTheme();
 
   const switchTheme = () => {
@@ -41,7 +43,10 @@ export default function Home() {
     setIsMounted(true);
   }, []);
 
-  const { data, loading, error } = useQuery(GET_ALL_USERS);
+  // const { data, loading, error } = useQuery(GET_ALL_USERS);
+  const { data, loading, error } = useGetAllUsersQuery();
+
+  console.log(data?.getAllUsers);
 
   if (error) return <div>Error...</div>;
 
