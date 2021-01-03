@@ -201,7 +201,7 @@ export type GetAllUsersQuery = (
   { __typename?: 'Query' }
   & { getAllUsers: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'login' | 'email'>
+    & Pick<User, 'id' | 'login' | 'email'>
   )> }
 );
 
@@ -234,7 +234,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'login' | 'email' | 'registeredAt' | 'role'>
+    & Pick<User, 'id' | 'login' | 'email' | 'registeredAt' | 'role'>
   )> }
 );
 
@@ -242,6 +242,7 @@ export type MeQuery = (
 export const GetAllUsersDocument = gql`
     query getAllUsers {
   getAllUsers {
+    id
     login
     email
   }
@@ -340,6 +341,7 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const MeDocument = gql`
     query Me {
   me {
+    id
     login
     email
     registeredAt

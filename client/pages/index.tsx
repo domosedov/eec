@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { initializeApollo } from "../lib/apolloClient";
 import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
@@ -10,6 +10,7 @@ import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
 const GET_ALL_USERS = gql`
   query getAllUsers {
     getAllUsers {
+      id
       login
       email
     }
@@ -24,7 +25,6 @@ const LOGOUT = gql`
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
-  // const [logout, { client }] = useMutation(LOGOUT);
   const [logout, { client }] = useLogoutMutation();
   const { theme, setTheme } = useTheme();
 
@@ -43,10 +43,7 @@ export default function Home() {
     setIsMounted(true);
   }, []);
 
-  // const { data, loading, error } = useQuery(GET_ALL_USERS);
   const { data, loading, error } = useGetAllUsersQuery();
-
-  console.log(data?.getAllUsers);
 
   if (error) return <div>Error...</div>;
 

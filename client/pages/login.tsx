@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ME_QUERY } from "./me";
