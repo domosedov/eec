@@ -43,6 +43,7 @@ type Metro {
 }
 
 type Mutation {
+  addTodo(description: String!, title: String!): Todo!
   changePassword(data: ChangePasswordInput!): User
   confirmUser(token: String!): Boolean!
   createJopa(data: RegisterInput!): User!
@@ -83,6 +84,7 @@ type Profile {
 }
 
 type Query {
+  getAllTodos: [Todo!]
   getAllUsers: [User!]!
   getProfile: Profile
   getUserById(id: ID = 1): User
@@ -118,6 +120,13 @@ type Student {
 type Subject {
   id: ID!
   name: String!
+}
+
+type Todo {
+  description: String!
+  id: ID!
+  isCompleted: Boolean!
+  title: String!
 }
 
 """The `Upload` scalar type represents a file upload."""

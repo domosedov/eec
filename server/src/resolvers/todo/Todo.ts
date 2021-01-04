@@ -4,10 +4,8 @@ import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 @Resolver(() => Todo)
 export class TodoResolver {
   @Query(() => [Todo], { nullable: true })
-  async allTodos (): Promise<Todo[] | null> {
-    const todos = await Todo.find({
-      relations: ['user']
-    })
+  async getAllTodos (): Promise<Todo[] | null> {
+    const todos = await Todo.find()
 
     if (!todos) return null
 
@@ -15,7 +13,7 @@ export class TodoResolver {
   }
 
   @Mutation(() => Todo)
-  async createTodo (
+  async addTodo (
       @Arg('title') title: string,
       @Arg('description') description: string
   ) {

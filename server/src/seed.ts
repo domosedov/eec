@@ -11,6 +11,7 @@ import { Status } from './entity/Status'
 import { Mark } from './entity/Mark'
 import { Profile } from './entity/Profile'
 import { Gender } from './resolvers/enums/Gender.enum'
+import { Todo } from './entity/Todo'
 
 async function up () {
   await User.create({
@@ -162,6 +163,17 @@ async function up () {
     students: [
       { id: 4 }
     ]
+  }).save()
+
+  await Todo.create({
+    title: 'Todo 1',
+    description: 'None 1',
+    isCompleted: true
+  }).save()
+
+  await Todo.create({
+    title: 'Todo 2',
+    description: 'Some description'
   }).save()
 }
 

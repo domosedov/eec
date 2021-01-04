@@ -28,6 +28,7 @@ export type Query = {
   getUsersByRole: Array<User>;
   me?: Maybe<User>;
   getProfile?: Maybe<Profile>;
+  getAllTodos?: Maybe<Array<Todo>>;
 };
 
 
@@ -134,6 +135,14 @@ export type Status = {
   name: Scalars['String'];
 };
 
+export type Todo = {
+  __typename?: 'Todo';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  isCompleted: Scalars['Boolean'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createJopa: User;
@@ -144,6 +153,7 @@ export type Mutation = {
   changePassword?: Maybe<User>;
   forgotPassword: Scalars['Boolean'];
   uploadFile: Scalars['Boolean'];
+  addTodo: Todo;
 };
 
 
@@ -180,6 +190,12 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationUploadFileArgs = {
   file: Scalars['Upload'];
+};
+
+
+export type MutationAddTodoArgs = {
+  description: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -236,6 +252,31 @@ export type MeQuery = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'login' | 'email' | 'registeredAt' | 'role'>
   )> }
+);
+
+export type GetAllTodosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTodosQuery = (
+  { __typename?: 'Query' }
+  & { getAllTodos?: Maybe<Array<(
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
+  )>> }
+);
+
+export type AddTodoMutationVariables = Exact<{
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type AddTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { addTodo: (
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
+  ) }
 );
 
 
@@ -374,6 +415,77 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const GetAllTodosDocument = gql`
+    query GetAllTodos {
+  getAllTodos {
+    id
+    title
+    description
+    isCompleted
+  }
+}
+    `;
+
+/**
+ * __useGetAllTodosQuery__
+ *
+ * To run a query within a React component, call `useGetAllTodosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTodosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTodosQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTodosQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTodosQuery, GetAllTodosQueryVariables>) {
+        return Apollo.useQuery<GetAllTodosQuery, GetAllTodosQueryVariables>(GetAllTodosDocument, baseOptions);
+      }
+export function useGetAllTodosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTodosQuery, GetAllTodosQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllTodosQuery, GetAllTodosQueryVariables>(GetAllTodosDocument, baseOptions);
+        }
+export type GetAllTodosQueryHookResult = ReturnType<typeof useGetAllTodosQuery>;
+export type GetAllTodosLazyQueryHookResult = ReturnType<typeof useGetAllTodosLazyQuery>;
+export type GetAllTodosQueryResult = Apollo.QueryResult<GetAllTodosQuery, GetAllTodosQueryVariables>;
+export const AddTodoDocument = gql`
+    mutation AddTodo($title: String!, $description: String!) {
+  addTodo(title: $title, description: $description) {
+    id
+    title
+    description
+    isCompleted
+  }
+}
+    `;
+export type AddTodoMutationFn = Apollo.MutationFunction<AddTodoMutation, AddTodoMutationVariables>;
+
+/**
+ * __useAddTodoMutation__
+ *
+ * To run a mutation, you first call `useAddTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTodoMutation, { data, loading, error }] = useAddTodoMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useAddTodoMutation(baseOptions?: Apollo.MutationHookOptions<AddTodoMutation, AddTodoMutationVariables>) {
+        return Apollo.useMutation<AddTodoMutation, AddTodoMutationVariables>(AddTodoDocument, baseOptions);
+      }
+export type AddTodoMutationHookResult = ReturnType<typeof useAddTodoMutation>;
+export type AddTodoMutationResult = Apollo.MutationResult<AddTodoMutation>;
+export type AddTodoMutationOptions = Apollo.BaseMutationOptions<AddTodoMutation, AddTodoMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {
