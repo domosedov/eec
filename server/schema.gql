@@ -92,6 +92,7 @@ type Query {
   hello: String!
   helloWorld: String!
   me: User
+  vacancies: [Vacancy!]!
 }
 
 input RegisterInput {
@@ -138,4 +139,26 @@ type User {
   login: String!
   registeredAt: DateTime!
   role: Role!
+}
+
+type Vacancy {
+  area: String
+  city: City!
+  createdAt: DateTime!
+  description: String
+  email: String!
+  firstName: String!
+  gender: Gender!
+  goal: String!
+  hourlyRate: Int!
+  id: ID!
+  isCompleted: Boolean!
+  isOpen: Boolean!
+  lastName: String!
+  metro: Metro
+  phone: String!
+  place: Place!
+  selectedProfileId: ID
+  student: Student!
+  subject: Subject!
 }

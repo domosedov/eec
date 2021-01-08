@@ -1,3 +1,7 @@
 export default function Footer() {
-  return <footer>Footer</footer>;
+  return (
+    <footer>
+      <div className="bg-indigo-500">Footer</div>
+    </footer>
+  );
 }

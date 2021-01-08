@@ -12,6 +12,7 @@ import { Mark } from './entity/Mark'
 import { Profile } from './entity/Profile'
 import { Gender } from './resolvers/enums/Gender.enum'
 import { Todo } from './entity/Todo'
+import { Vacancy } from './entity/Vacancy'
 
 async function up () {
   await User.create({
@@ -174,6 +175,30 @@ async function up () {
   await Todo.create({
     title: 'Todo 2',
     description: 'Some description'
+  }).save()
+
+  await Vacancy.create({
+    firstName: 'Alex',
+    lastName: 'Hellix',
+    city: {
+      id: 1
+    },
+    email: 'asdasd@dsa.as',
+    phone: '12124124',
+    hourlyRate: 121313,
+    goal: 'sadasdasd',
+    place: {
+      id: 2
+    },
+    subject: {
+      id: 3
+    },
+    student: {
+      id: 1
+    },
+    selectedProfile: {
+      id: 1
+    }
   }).save()
 }
 

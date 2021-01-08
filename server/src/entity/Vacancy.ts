@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinTable,
-  ManyToMany
+  ManyToMany,
+  BaseEntity
 } from 'typeorm'
 import { City } from './City'
 import { Gender } from '../resolvers/enums/Gender.enum'
@@ -14,82 +15,112 @@ import { Place } from './Place'
 import { Profile } from './Profile'
 import { Student } from './Student'
 import { Subject } from './Subject'
+import { Field, ID, Int, ObjectType } from 'type-graphql'
 
+@ObjectType()
 @Entity()
-export class Vacancy {
+export class Vacancy extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({
     default: 'f'
   })
   isOpen: boolean;
 
+  @Field()
   @Column({
     default: 'f'
   })
   isCompleted: boolean;
 
+  @Field()
   @Column()
   firstName: string;
 
+  @Field()
   @Column()
   lastName: string;
 
+  @Field()
   @Column()
   email: string;
 
+  @Field()
   @Column()
   phone: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
-    type: 'enum',
-    enum: Gender,
-    default: Gender.ALL
-  })
-  gender: Gender;
-
-  @Column({
-    default: ''
+    nullable: true
   })
   area: string;
 
+  @Field(() => String, { nullable: true })
   @Column({
-    default: ''
+    nullable: true
   })
   description: string;
 
+  @Field()
   @Column()
   goal: string;
 
+  @Field(() => Int)
   @Column()
   hourlyRate: number;
 
+  @Field(() => Gender)
+  @Column({
+    type: 'enum',
+    enum: Gender,
+    default: Gender.NONE
+  })
+  gender: Gender;
+
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Field(() => City)
   @ManyToOne(() => City, (city) => city.vacancy, {
-    nullable: false
+    eager: true
   })
   city: City;
 
-  @ManyToOne(() => Metro, (metro) => metro.vacancy)
+  @Field(() => Metro, { nullable: true })
+  @ManyToOne(() => Metro, (metro) => metro.vacancy, {
+    eager: true,
+    nullable: true
+  })
   metro: Metro;
 
-  @ManyToOne(() => Place, (place) => place.vacancy)
+  @Field(() => Place)
+  @ManyToOne(() => Place, (place) => place.vacancy, {
+    eager: true,
+    nullable: false
+  })
   place: Place;
 
+  @Field(() => Subject)
   @ManyToOne(() => Subject, (subject) => subject.vacancy, {
+    eager: true,
     nullable: false
   })
   subject: Subject;
 
+  @Field(() => Student)
   @ManyToOne(() => Student, (student) => student.vacancy, {
+    eager: true,
     nullable: false
   })
   student: Student;
 
-  @ManyToOne(() => Profile, (profile) => profile.selectedByVacancy)
+  @ManyToOne(() => Profile, (profile) => profile.selectedByVacancy, {
+    nullable: true
+  })
   selectedProfile: Profile;
 
   @ManyToOne(() => Profile, (profile) => profile.executableVacancy)

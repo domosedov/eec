@@ -14,7 +14,6 @@ import { createSchema } from './utils/createSchema'
 import { __prod__, COOKIE_NAME, PUBLIC_DIR } from './constants'
 import entities from './entity'
 import up from './seed'
-import { Profile } from './entity/Profile'
 
 const main = async () => {
   await createConnection({
@@ -29,8 +28,6 @@ const main = async () => {
 
   // Run seeds
   await up()
-
-  console.log(await Profile.findOne({ id: 1 }))
 
   const app = express()
   const RedisStore = connectRedis(session)
