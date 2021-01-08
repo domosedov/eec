@@ -1,6 +1,3 @@
-/**
- * Example from https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
- */
 import { useMemo } from "react";
 import {
   ApolloClient,
@@ -12,6 +9,8 @@ import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
 
 const __isBrowser__ = typeof window !== "undefined";
+
+export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
@@ -57,6 +56,18 @@ export const initializeApollo = (initialState?: NormalizedCacheObject) => {
   return _apolloClient;
 };
 
-export const useApollo = (initialState?: NormalizedCacheObject) => {
-  return useMemo(() => initializeApollo(initialState), [initialState]);
+export const addApolloState = (
+  client: ApolloClient<NormalizedCacheObject>,
+  pageProps: any
+) => {
+  if (pageProps?.props) {
+    pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
+  }
+
+  return pageProps;
+};
+
+export const useApollo = (pageProps: any) => {
+  const state = pageProps[APOLLO_STATE_PROP_NAME];
+  return useMemo(() => initializeApollo(state), [state]);
 };

@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useMeQuery } from "../generated/graphql";
-import { initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
 export const ME_QUERY = gql`
   query Me {
@@ -37,11 +37,7 @@ export default function MePage() {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apolloClient = initializeApollo();
 
-  const headers = ctx.req.headers;
-
-  console.log(headers);
-
-  const query = await apolloClient.query({
+  await apolloClient.query({
     query: ME_QUERY,
     context: {
       headers: {
@@ -50,11 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
 
-  console.log(query);
-
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
+  return addApolloState(apolloClient, {
+    props: {},
+  });
 };

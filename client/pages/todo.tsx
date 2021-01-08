@@ -6,7 +6,7 @@ import {
   useAddTodoMutation,
   useGetAllTodosQuery,
 } from "../generated/graphql";
-import { initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
 const GET_ALL_TODOS = gql`
   query GetAllTodos {
@@ -100,12 +100,10 @@ export const getStaticProps: GetStaticProps = async () => {
     query: GET_ALL_TODOS,
   });
 
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
+  return addApolloState(apolloClient, {
+    props: {},
     revalidate: 1,
-  };
+  });
 };
 
 export default TodoPage;

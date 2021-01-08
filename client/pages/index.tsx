@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
-import { initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
 
 const GET_ALL_USERS = gql`
@@ -90,16 +90,16 @@ export default function Home() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apolloClient = initializeApollo(undefined);
+  const apolloClient = initializeApollo();
 
   await apolloClient.query({
     query: GET_ALL_USERS,
   });
 
-  return {
+  return addApolloState(apolloClient, {
     props: {
-      initialApolloState: apolloClient.cache.extract(),
+      foo: "bar",
     },
     revalidate: 1,
-  };
+  });
 };
