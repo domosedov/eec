@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
+import { NextSeo } from "next-seo";
 
 const GET_ALL_USERS = gql`
   query getAllUsers {
@@ -50,13 +50,9 @@ export default function Home() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="bg-white text-black dark:bg-black dark:text-white">
+    <>
+      <NextSeo title="Главная" />
+      <section className="bg-white text-black dark:bg-black dark:text-white">
         <h1>Main content</h1>
         <button className="bg-blue-500" onClick={switchTheme}>
           Switch theme
@@ -80,12 +76,8 @@ export default function Home() {
         <div>
           <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
-      </main>
-
-      <footer>
-        <p>Footer</p>
-      </footer>
-    </div>
+      </section>
+    </>
   );
 }
 

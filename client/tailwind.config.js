@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   purge: {
     content: [
@@ -10,7 +12,13 @@ module.exports = {
   },
   darkMode: "class", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        lime: colors.lime,
+        gray: colors.blueGray
+        
+      }
+    },
   },
   variants: {
     extend: {},
