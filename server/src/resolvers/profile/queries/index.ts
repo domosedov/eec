@@ -1,3 +1,3 @@
-import { GetProfileResolver } from './GetProfile'
+import { ProfileResolver } from './Profile'
 
-export default [GetProfileResolver] as const
+export default [ProfileResolver] as const

@@ -154,7 +154,7 @@ type Vacancy {
   hourlyRate: Int!
   id: ID!
   isCompleted: Boolean!
-  isOpen: Boolean!
+  isPublished: Boolean!
   lastName: String!
   metro: Metro
   phone: String!

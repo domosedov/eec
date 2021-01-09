@@ -28,7 +28,7 @@ export class Vacancy extends BaseEntity {
   @Column({
     default: 'f'
   })
-  isOpen: boolean;
+  isPublished: boolean;
 
   @Field()
   @Column({
@@ -76,7 +76,7 @@ export class Vacancy extends BaseEntity {
   @Column({
     type: 'enum',
     enum: Gender,
-    default: Gender.NONE
+    default: Gender.ALL
   })
   gender: Gender;
 
