@@ -54,7 +54,9 @@ export class Profile extends BaseEntity {
   phone: string;
 
   @Field()
-  @Column()
+  @Column({
+    unique: true
+  })
   email: string;
 
   @Field(() => Int)
@@ -93,6 +95,7 @@ export class Profile extends BaseEntity {
   @Column()
   hourlyRate: number;
 
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 
@@ -108,55 +111,66 @@ export class Profile extends BaseEntity {
 
   @Field(() => [Subject])
   @ManyToMany(() => Subject, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   @JoinTable()
   subjects: Subject[];
 
   @Field(() => [Student])
   @ManyToMany(() => Student, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   @JoinTable()
   students: Student[];
 
   @Field(() => [Place])
   @ManyToMany(() => Place, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   @JoinTable()
   places: Place[];
 
   @Field(() => [Mark])
   @ManyToMany(() => Mark, {
-    eager: true
+    eager: true,
+    nullable: true
   })
   @JoinTable()
   marks: Mark[];
 
   @Field(() => City)
   @ManyToOne(() => City, (city) => city.profile, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   city: City;
 
-  @Field(() => Metro)
+  @Field(() => Metro, { nullable: true })
   @ManyToOne(() => Metro, (metro) => metro.profile, {
-    eager: true
+    eager: true,
+    nullable: true
   })
   metro: Metro;
 
   @Field(() => Status)
   @ManyToOne(() => Status, (status) => status.profile, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   status: Status;
 
   @OneToMany(() => Vacancy, (vacancy) => vacancy.selectedProfile, {
-    eager: true
+    eager: true,
+    nullable: true
   })
   selectedByVacancy: Vacancy;
 
-  @OneToMany(() => Vacancy, (vacancy) => vacancy.executorProfile)
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.executorProfile, {
+    eager: true,
+    nullable: true
+  })
   executableVacancy: Vacancy;
 }

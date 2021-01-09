@@ -3,8 +3,8 @@ import { Query, Resolver } from 'type-graphql'
 
 @Resolver()
 export class GetProfileResolver {
-  @Query(() => Profile, { nullable: true })
-  async getProfile () {
-    return await Profile.findOne()
+  @Query(() => [Profile])
+  async profiles () {
+    return await Profile.find()
   }
 }

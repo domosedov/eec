@@ -64,6 +64,7 @@ type Profile {
   birthYear: Int!
   careerStartYear: Int!
   city: City!
+  createdAt: DateTime!
   description: String
   education: String!
   email: String!
@@ -74,7 +75,7 @@ type Profile {
   isPublished: Boolean!
   lastName: String!
   marks: [Mark!]!
-  metro: Metro!
+  metro: Metro
   middleName: String!
   phone: String!
   places: [Place!]!
@@ -86,12 +87,12 @@ type Profile {
 type Query {
   getAllTodos: [Todo!]
   getAllUsers: [User!]!
-  getProfile: Profile
   getUserById(id: ID = 1): User
   getUsersByRole(role: Role = GUEST): [User!]!
   hello: String!
   helloWorld: String!
   me: User
+  profiles: [Profile!]!
   vacancies: [Vacancy!]!
 }
 

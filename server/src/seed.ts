@@ -166,6 +166,26 @@ async function up () {
     ]
   }).save()
 
+  await Profile.create({
+    area: 'Чукотка',
+    birthYear: 2000,
+    careerStartYear: 2010,
+    city: { id: 3 },
+    description: 'Some descr',
+    education: 'KubSAU',
+    email: 'asdasd@asd.sdf',
+    firstName: 'Peter',
+    gender: Gender.WOMEN,
+    hourlyRate: 400,
+    isPublished: true,
+    phone: '2342342343',
+    middleName: 'Ierichon',
+    lastName: 'Quokka',
+    user: { id: 3 },
+    status: { id: 2 }
+
+  }).save()
+
   await Todo.create({
     title: 'Todo 1',
     description: 'None 1',
