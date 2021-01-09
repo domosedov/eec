@@ -3,13 +3,14 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany
+  OneToMany,
+  BaseEntity
 } from 'typeorm'
 import { Profile } from './Profile'
 
 @ObjectType()
 @Entity()
-export class Status {
+export class Status extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;

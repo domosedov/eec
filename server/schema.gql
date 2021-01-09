@@ -85,14 +85,21 @@ type Profile {
 }
 
 type Query {
+  cities: [City!]!
   getAllTodos: [Todo!]
   getAllUsers: [User!]!
   getUserById(id: ID = 1): User
   getUsersByRole(role: Role = GUEST): [User!]!
   hello: String!
   helloWorld: String!
+  marks: [Mark!]!
   me: User
+  metros: [Metro!]!
+  places: [Place!]!
   profiles: [Profile!]!
+  statuses: [Status!]!
+  students: [Student!]!
+  subjects: [Subject!]!
   vacancies: [Vacancy!]!
 }
 
