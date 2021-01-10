@@ -27,8 +27,16 @@ export type Query = {
   getUserById?: Maybe<User>;
   getUsersByRole: Array<User>;
   me?: Maybe<User>;
-  getProfile?: Maybe<Profile>;
+  profiles: Array<Profile>;
+  vacancies: Array<Vacancy>;
   getAllTodos?: Maybe<Array<Todo>>;
+  cities: Array<City>;
+  metros: Array<Metro>;
+  statuses: Array<Status>;
+  students: Array<Student>;
+  subjects: Array<Subject>;
+  marks: Array<Mark>;
+  places: Array<Place>;
 };
 
 
@@ -75,12 +83,13 @@ export type Profile = {
   description?: Maybe<Scalars['String']>;
   education: Scalars['String'];
   hourlyRate: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
   subjects: Array<Subject>;
   students: Array<Student>;
   places: Array<Place>;
   marks: Array<Mark>;
   city: City;
-  metro: Metro;
+  metro?: Maybe<Metro>;
   status: Status;
 };
 
@@ -133,6 +142,29 @@ export type Status = {
   __typename?: 'Status';
   id: Scalars['ID'];
   name: Scalars['String'];
+};
+
+export type Vacancy = {
+  __typename?: 'Vacancy';
+  id: Scalars['ID'];
+  isPublished: Scalars['Boolean'];
+  isCompleted: Scalars['Boolean'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  phone: Scalars['String'];
+  area?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  goal: Scalars['String'];
+  hourlyRate: Scalars['Int'];
+  gender: Gender;
+  createdAt: Scalars['DateTime'];
+  city: City;
+  metro?: Maybe<Metro>;
+  place: Place;
+  subject: Subject;
+  student: Student;
+  selectedProfileId?: Maybe<Scalars['ID']>;
 };
 
 export type Todo = {
@@ -210,6 +242,29 @@ export type ChangePasswordInput = {
 };
 
 
+export type GetFormOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFormOptionsQuery = (
+  { __typename?: 'Query' }
+  & { cities: Array<(
+    { __typename?: 'City' }
+    & Pick<City, 'id' | 'name'>
+  )>, metros: Array<(
+    { __typename?: 'Metro' }
+    & Pick<Metro, 'id' | 'name'>
+  )>, places: Array<(
+    { __typename?: 'Place' }
+    & Pick<Place, 'id' | 'name'>
+  )>, subjects: Array<(
+    { __typename?: 'Subject' }
+    & Pick<Subject, 'id' | 'name'>
+  )>, students: Array<(
+    { __typename?: 'Student' }
+    & Pick<Student, 'id' | 'name'>
+  )> }
+);
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -280,6 +335,55 @@ export type AddTodoMutation = (
 );
 
 
+export const GetFormOptionsDocument = gql`
+    query GetFormOptions {
+  cities {
+    id
+    name
+  }
+  metros {
+    id
+    name
+  }
+  places {
+    id
+    name
+  }
+  subjects {
+    id
+    name
+  }
+  students {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetFormOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetFormOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFormOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFormOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFormOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetFormOptionsQuery, GetFormOptionsQueryVariables>) {
+        return Apollo.useQuery<GetFormOptionsQuery, GetFormOptionsQueryVariables>(GetFormOptionsDocument, baseOptions);
+      }
+export function useGetFormOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFormOptionsQuery, GetFormOptionsQueryVariables>) {
+          return Apollo.useLazyQuery<GetFormOptionsQuery, GetFormOptionsQueryVariables>(GetFormOptionsDocument, baseOptions);
+        }
+export type GetFormOptionsQueryHookResult = ReturnType<typeof useGetFormOptionsQuery>;
+export type GetFormOptionsLazyQueryHookResult = ReturnType<typeof useGetFormOptionsLazyQuery>;
+export type GetFormOptionsQueryResult = Apollo.QueryResult<GetFormOptionsQuery, GetFormOptionsQueryVariables>;
 export const GetAllUsersDocument = gql`
     query getAllUsers {
   getAllUsers {
