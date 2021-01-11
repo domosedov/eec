@@ -14,8 +14,8 @@ export class TodoResolver {
 
   @Mutation(() => Todo)
   async addTodo (
-      @Arg('title') title: string,
-      @Arg('description') description: string
+    @Arg('title') title: string,
+    @Arg('description', { nullable: true }) description: string
   ) {
     return await Todo.create({
       title,

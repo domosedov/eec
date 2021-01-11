@@ -43,7 +43,7 @@ type Metro {
 }
 
 type Mutation {
-  addTodo(description: String!, title: String!): Todo!
+  addTodo(description: String, title: String!): Todo!
   changePassword(data: ChangePasswordInput!): User
   confirmUser(token: String!): Boolean!
   createJopa(data: RegisterInput!): User!
