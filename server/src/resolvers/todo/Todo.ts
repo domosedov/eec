@@ -1,15 +1,22 @@
 import { Todo } from '../../entity/Todo'
-import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
 
 @Resolver(() => Todo)
 export class TodoResolver {
-  @Query(() => [Todo], { nullable: true })
-  async todos (): Promise<Todo[] | null> {
+  @Query(() => [Todo])
+  async todos (): Promise<Todo[]> {
     const todos = await Todo.find()
 
-    if (!todos) return null
-
     return todos
+  }
+
+  @Query(() => Todo, { nullable: true })
+  async todo (@Arg('id', () => ID) id: number) {
+    const todo = await Todo.findOne(id)
+
+    if (!todo) return null
+
+    return todo
   }
 
   @Mutation(() => Todo)

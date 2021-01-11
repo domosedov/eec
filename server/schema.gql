@@ -99,7 +99,8 @@ type Query {
   statuses: [Status!]!
   students: [Student!]!
   subjects: [Subject!]!
-  todos: [Todo!]
+  todo(id: ID!): Todo
+  todos: [Todo!]!
   vacancies: [Vacancy!]!
 }
 

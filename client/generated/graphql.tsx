@@ -29,7 +29,8 @@ export type Query = {
   me?: Maybe<User>;
   profiles: Array<Profile>;
   vacancies: Array<Vacancy>;
-  todos?: Maybe<Array<Todo>>;
+  todos: Array<Todo>;
+  todo?: Maybe<Todo>;
   cities: Array<City>;
   metros: Array<Metro>;
   statuses: Array<Status>;
@@ -47,6 +48,11 @@ export type QueryGetUserByIdArgs = {
 
 export type QueryGetUsersByRoleArgs = {
   role?: Maybe<Role>;
+};
+
+
+export type QueryTodoArgs = {
+  id: Scalars['ID'];
 };
 
 export type User = {
@@ -309,15 +315,28 @@ export type MeQuery = (
   )> }
 );
 
+export type GetTodoByIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetTodoByIdQuery = (
+  { __typename?: 'Query' }
+  & { todo?: Maybe<(
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
+  )> }
+);
+
 export type GetAllTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllTodosQuery = (
   { __typename?: 'Query' }
-  & { todos?: Maybe<Array<(
+  & { todos: Array<(
     { __typename?: 'Todo' }
     & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
-  )>> }
+  )> }
 );
 
 export type AddTodoMutationVariables = Exact<{
@@ -519,6 +538,42 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const GetTodoByIdDocument = gql`
+    query GetTodoById($id: ID!) {
+  todo(id: $id) {
+    id
+    title
+    description
+    isCompleted
+  }
+}
+    `;
+
+/**
+ * __useGetTodoByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTodoByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTodoByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTodoByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTodoByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTodoByIdQuery, GetTodoByIdQueryVariables>) {
+        return Apollo.useQuery<GetTodoByIdQuery, GetTodoByIdQueryVariables>(GetTodoByIdDocument, baseOptions);
+      }
+export function useGetTodoByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTodoByIdQuery, GetTodoByIdQueryVariables>) {
+          return Apollo.useLazyQuery<GetTodoByIdQuery, GetTodoByIdQueryVariables>(GetTodoByIdDocument, baseOptions);
+        }
+export type GetTodoByIdQueryHookResult = ReturnType<typeof useGetTodoByIdQuery>;
+export type GetTodoByIdLazyQueryHookResult = ReturnType<typeof useGetTodoByIdLazyQuery>;
+export type GetTodoByIdQueryResult = Apollo.QueryResult<GetTodoByIdQuery, GetTodoByIdQueryVariables>;
 export const GetAllTodosDocument = gql`
     query GetAllTodos {
   todos {

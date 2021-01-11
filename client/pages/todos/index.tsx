@@ -1,8 +1,8 @@
+import Link from "next/link";
 import { gql, Reference } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { FormEvent, useState } from "react";
 import {
-  GetAllTodosQuery,
   useAddTodoMutation,
   useGetAllTodosQuery,
 } from "../../generated/graphql";
@@ -11,7 +11,7 @@ import {
   initializeApollo,
 } from "../../lib/apollo/apolloClient";
 
-const GET_ALL_TODOS = gql`
+export const GET_ALL_TODOS = gql`
   query GetAllTodos {
     todos {
       id
@@ -22,7 +22,7 @@ const GET_ALL_TODOS = gql`
   }
 `;
 
-const ADD_TODO = gql`
+export const ADD_TODO = gql`
   mutation AddTodo($title: String!, $description: String!) {
     addTodo(title: $title, description: $description) {
       id
@@ -36,48 +36,22 @@ const ADD_TODO = gql`
 const TodoPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const { data } = useGetAllTodosQuery();
+  const { data, loading, error } = useGetAllTodosQuery();
   const [addTodo] = useAddTodoMutation({
     update(cache, { data }) {
       const newTodoFromResponse = data?.addTodo;
-      // 1 ============================================
-      // const cachedResult = cache.readQuery({
-      //   query: GET_ALL_TODOS,
-      // }) as GetAllTodosQuery;
-      //
-      // const todos = cachedResult.todos || [];
-      //
-      // console.log({ todos });
-      //
-      // cache.writeQuery({
-      //   query: GET_ALL_TODOS,
-      //   data: {
-      //     todos: [...todos, newTodoFromResponse],
-      //   },
-      // });
-
-      // 2 ============================================
 
       cache.modify({
         fields: {
-          todos(
-            existingTodoRefs: Reference[] = [],
-            { toReference, isReference }
-          ) {
-            console.log(isReference(newTodoFromResponse));
-
+          todos(existingTodoRefs: Reference[] = [], { toReference }) {
             if (newTodoFromResponse) {
-              const newRef = toReference(newTodoFromResponse);
+              const newTodoRef = toReference(newTodoFromResponse);
 
-              console.log(isReference(newRef));
-
-              return [...existingTodoRefs, newRef];
+              return [...existingTodoRefs, newTodoRef];
             }
           },
         },
       });
-
-
     },
   });
 
@@ -91,7 +65,9 @@ const TodoPage = () => {
     });
   };
 
-  if (!data) return null;
+  if (error) return <div>Error....</div>;
+
+  if (loading && !data) return <div>Loading...</div>;
 
   return (
     <div>
@@ -115,7 +91,14 @@ const TodoPage = () => {
         <br />
         <button type="submit">Add Todo</button>
       </form>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {data?.todos &&
+        data?.todos.map((todo) => (
+          <li key={todo.id}>
+            <Link href={`/todos/${todo.id}`}>
+              <a>{todo.title}</a>
+            </Link>
+          </li>
+        ))}
     </div>
   );
 };
