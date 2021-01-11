@@ -29,7 +29,7 @@ export type Query = {
   me?: Maybe<User>;
   profiles: Array<Profile>;
   vacancies: Array<Vacancy>;
-  getAllTodos?: Maybe<Array<Todo>>;
+  todos?: Maybe<Array<Todo>>;
   cities: Array<City>;
   metros: Array<Metro>;
   statuses: Array<Status>;
@@ -226,7 +226,7 @@ export type MutationUploadFileArgs = {
 
 
 export type MutationAddTodoArgs = {
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
 
@@ -314,7 +314,7 @@ export type GetAllTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllTodosQuery = (
   { __typename?: 'Query' }
-  & { getAllTodos?: Maybe<Array<(
+  & { todos?: Maybe<Array<(
     { __typename?: 'Todo' }
     & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
   )>> }
@@ -521,7 +521,7 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const GetAllTodosDocument = gql`
     query GetAllTodos {
-  getAllTodos {
+  todos {
     id
     title
     description

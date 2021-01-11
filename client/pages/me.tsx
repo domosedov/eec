@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useMeQuery } from "../generated/graphql";
-import { addApolloState, initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apollo/apolloClient";
 
 export const ME_QUERY = gql`
   query Me {

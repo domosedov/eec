@@ -1,16 +1,19 @@
-import { gql } from "@apollo/client";
+import { gql, Reference } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { FormEvent, useState } from "react";
 import {
   GetAllTodosQuery,
   useAddTodoMutation,
   useGetAllTodosQuery,
-} from "../generated/graphql";
-import { addApolloState, initializeApollo } from "../lib/apolloClient";
+} from "../../generated/graphql";
+import {
+  addApolloState,
+  initializeApollo,
+} from "../../lib/apollo/apolloClient";
 
 const GET_ALL_TODOS = gql`
   query GetAllTodos {
-    getAllTodos {
+    todos {
       id
       title
       description
@@ -37,26 +40,50 @@ const TodoPage = () => {
   const [addTodo] = useAddTodoMutation({
     update(cache, { data }) {
       const newTodoFromResponse = data?.addTodo;
-      const existingTodos = cache.readQuery({
-        query: GET_ALL_TODOS,
-      }) as GetAllTodosQuery;
+      // 1 ============================================
+      // const cachedResult = cache.readQuery({
+      //   query: GET_ALL_TODOS,
+      // }) as GetAllTodosQuery;
+      //
+      // const todos = cachedResult.todos || [];
+      //
+      // console.log({ todos });
+      //
+      // cache.writeQuery({
+      //   query: GET_ALL_TODOS,
+      //   data: {
+      //     todos: [...todos, newTodoFromResponse],
+      //   },
+      // });
 
-      const todos = existingTodos.getAllTodos || [];
+      // 2 ============================================
 
-      console.log(existingTodos);
+      cache.modify({
+        fields: {
+          todos(
+            existingTodoRefs: Reference[] = [],
+            { toReference, isReference }
+          ) {
+            console.log(isReference(newTodoFromResponse));
 
-      cache.writeQuery({
-        query: GET_ALL_TODOS,
-        data: {
-          getAllTodos: [...todos, newTodoFromResponse],
+            if (newTodoFromResponse) {
+              const newRef = toReference(newTodoFromResponse);
+
+              console.log(isReference(newRef));
+
+              return [...existingTodoRefs, newRef];
+            }
+          },
         },
       });
+
+
     },
   });
 
   const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault();
-    addTodo({
+    await addTodo({
       variables: {
         title,
         description,

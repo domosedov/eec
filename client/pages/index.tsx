@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
-import { addApolloState, initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apollo/apolloClient";
 import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
 import { NextSeo } from "next-seo";
 

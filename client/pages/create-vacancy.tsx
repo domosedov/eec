@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useGetFormOptionsQuery } from "../generated/graphql";
-import { addApolloState, initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apollo/apolloClient";
 import TextInput from "../components/layout/TextInput";
 
 const GET_FORM_OPTIONS = gql`

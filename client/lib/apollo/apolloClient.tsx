@@ -1,16 +1,16 @@
 import { useMemo } from "react";
 import {
   ApolloClient,
-  InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
+import {cache} from './cache'
 
 const __isBrowser__ = typeof window !== "undefined";
 
-export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
+export const APOLLO_STATE_PROP_NAME = "__APOLLO_SSR_STATE__";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
@@ -25,7 +25,7 @@ const httpLink = createUploadLink({
 const createApolloClient = () => {
   return new ApolloClient({
     link: httpLink,
-    cache: new InMemoryCache(),
+    cache,
     ssrMode: !__isBrowser__,
     // credentials: "include",
   });

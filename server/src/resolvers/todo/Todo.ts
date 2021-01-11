@@ -4,7 +4,7 @@ import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 @Resolver(() => Todo)
 export class TodoResolver {
   @Query(() => [Todo], { nullable: true })
-  async getAllTodos (): Promise<Todo[] | null> {
+  async todos (): Promise<Todo[] | null> {
     const todos = await Todo.find()
 
     if (!todos) return null

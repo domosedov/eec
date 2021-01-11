@@ -86,7 +86,6 @@ type Profile {
 
 type Query {
   cities: [City!]!
-  getAllTodos: [Todo!]
   getAllUsers: [User!]!
   getUserById(id: ID = 1): User
   getUsersByRole(role: Role = GUEST): [User!]!
@@ -100,6 +99,7 @@ type Query {
   statuses: [Status!]!
   students: [Student!]!
   subjects: [Subject!]!
+  todos: [Todo!]
   vacancies: [Vacancy!]!
 }
 
