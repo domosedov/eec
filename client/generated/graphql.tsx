@@ -23,8 +23,8 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   helloWorld: Scalars['String'];
-  getAllUsers: Array<User>;
-  getUserById?: Maybe<User>;
+  users: Array<User>;
+  user?: Maybe<User>;
   getUsersByRole: Array<User>;
   me?: Maybe<User>;
   profiles: Array<Profile>;
@@ -41,7 +41,7 @@ export type Query = {
 };
 
 
-export type QueryGetUserByIdArgs = {
+export type QueryUserArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
@@ -62,6 +62,8 @@ export type User = {
   email: Scalars['EmailAddress'];
   registeredAt: Scalars['DateTime'];
   role: Role;
+  isConfirmed: Scalars['Boolean'];
+  isBanned: Scalars['Boolean'];
 };
 
 
@@ -248,6 +250,29 @@ export type ChangePasswordInput = {
 };
 
 
+export type ConfirmUserRegisterMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type ConfirmUserRegisterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'confirmUser'>
+);
+
+export type UserRegisterMutationVariables = Exact<{
+  data: RegisterInput;
+}>;
+
+
+export type UserRegisterMutation = (
+  { __typename?: 'Mutation' }
+  & { register: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'login' | 'email' | 'role' | 'registeredAt'>
+  ) }
+);
+
 export type GetFormOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -276,7 +301,7 @@ export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllUsersQuery = (
   { __typename?: 'Query' }
-  & { getAllUsers: Array<(
+  & { users: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'login' | 'email'>
   )> }
@@ -354,6 +379,72 @@ export type AddTodoMutation = (
 );
 
 
+export const ConfirmUserRegisterDocument = gql`
+    mutation ConfirmUserRegister($token: String!) {
+  confirmUser(token: $token)
+}
+    `;
+export type ConfirmUserRegisterMutationFn = Apollo.MutationFunction<ConfirmUserRegisterMutation, ConfirmUserRegisterMutationVariables>;
+
+/**
+ * __useConfirmUserRegisterMutation__
+ *
+ * To run a mutation, you first call `useConfirmUserRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmUserRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmUserRegisterMutation, { data, loading, error }] = useConfirmUserRegisterMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useConfirmUserRegisterMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmUserRegisterMutation, ConfirmUserRegisterMutationVariables>) {
+        return Apollo.useMutation<ConfirmUserRegisterMutation, ConfirmUserRegisterMutationVariables>(ConfirmUserRegisterDocument, baseOptions);
+      }
+export type ConfirmUserRegisterMutationHookResult = ReturnType<typeof useConfirmUserRegisterMutation>;
+export type ConfirmUserRegisterMutationResult = Apollo.MutationResult<ConfirmUserRegisterMutation>;
+export type ConfirmUserRegisterMutationOptions = Apollo.BaseMutationOptions<ConfirmUserRegisterMutation, ConfirmUserRegisterMutationVariables>;
+export const UserRegisterDocument = gql`
+    mutation UserRegister($data: RegisterInput!) {
+  register(data: $data) {
+    id
+    login
+    email
+    role
+    registeredAt
+  }
+}
+    `;
+export type UserRegisterMutationFn = Apollo.MutationFunction<UserRegisterMutation, UserRegisterMutationVariables>;
+
+/**
+ * __useUserRegisterMutation__
+ *
+ * To run a mutation, you first call `useUserRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userRegisterMutation, { data, loading, error }] = useUserRegisterMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUserRegisterMutation(baseOptions?: Apollo.MutationHookOptions<UserRegisterMutation, UserRegisterMutationVariables>) {
+        return Apollo.useMutation<UserRegisterMutation, UserRegisterMutationVariables>(UserRegisterDocument, baseOptions);
+      }
+export type UserRegisterMutationHookResult = ReturnType<typeof useUserRegisterMutation>;
+export type UserRegisterMutationResult = Apollo.MutationResult<UserRegisterMutation>;
+export type UserRegisterMutationOptions = Apollo.BaseMutationOptions<UserRegisterMutation, UserRegisterMutationVariables>;
 export const GetFormOptionsDocument = gql`
     query GetFormOptions {
   cities {
@@ -405,7 +496,7 @@ export type GetFormOptionsLazyQueryHookResult = ReturnType<typeof useGetFormOpti
 export type GetFormOptionsQueryResult = Apollo.QueryResult<GetFormOptionsQuery, GetFormOptionsQueryVariables>;
 export const GetAllUsersDocument = gql`
     query getAllUsers {
-  getAllUsers {
+  users {
     id
     login
     email

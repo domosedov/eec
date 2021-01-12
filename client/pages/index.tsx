@@ -9,7 +9,7 @@ import { NextSeo } from "next-seo";
 
 const GET_ALL_USERS = gql`
   query getAllUsers {
-    getAllUsers {
+    users {
       id
       login
       email
@@ -36,7 +36,7 @@ export default function Home() {
 
   const handleLogoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     await logout();
-    client.resetStore();
+    await client.resetStore();
   };
 
   useEffect(() => {

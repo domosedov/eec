@@ -5,12 +5,12 @@ import { User } from '../../../entity/User'
 @Resolver()
 export class GetUserResolver {
     @Query(() => [User])
-  async getAllUsers (): Promise<User[]> {
+  async users (): Promise<User[]> {
     return User.find()
   }
 
     @Query(() => User, { nullable: true })
-    async getUserById (@Arg('id', () => ID, {
+    async user (@Arg('id', () => ID, {
       defaultValue: 1
     }) id: number): Promise<User | null> {
       const user = await User.findOne({ where: { id } })

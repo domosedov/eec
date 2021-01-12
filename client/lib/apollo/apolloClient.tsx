@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import {
-  ApolloClient,
+  ApolloClient, from,
   NormalizedCacheObject,
 } from "@apollo/client";
+import { onError } from '@apollo/client/link/error'
 import { createUploadLink } from "apollo-upload-client";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
@@ -22,9 +23,22 @@ const httpLink = createUploadLink({
   credentials: "include",
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) =>
+        console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+        ),
+    );
+
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
+
+const link = from([errorLink, httpLink ])
+
 const createApolloClient = () => {
   return new ApolloClient({
-    link: httpLink,
+    link,
     cache,
     ssrMode: !__isBrowser__,
     // credentials: "include",

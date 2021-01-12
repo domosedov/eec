@@ -44,10 +44,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const apolloClient = initializeApollo();
 
-  await apolloClient.query({
-    query: GET_TODO,
-    variables: { id },
-  });
+  try {
+    await apolloClient.query({
+      query: GET_TODO,
+      variables: { id },
+    });
+  } catch (e) {
+    console.log(e)
+  }
 
   return addApolloState(apolloClient, {
     props: {},

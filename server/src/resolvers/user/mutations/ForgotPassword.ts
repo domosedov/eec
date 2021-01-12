@@ -8,7 +8,7 @@ import { User } from '../../../entity/User'
 import { sendEmail } from '../../../utils/sendEmail'
 import { v4 as uuid } from 'uuid'
 import { AppContext } from '../../../types/AppContext'
-import { REDIS_PREFIX_FORGOT_PASSWORD } from '../../../constants'
+import { CLIENT_URL, REDIS_PREFIX_FORGOT_PASSWORD } from '../../../constants'
 
 @Resolver()
 export class ForgotPasswordResolver {
@@ -25,7 +25,7 @@ export class ForgotPasswordResolver {
 
     await ctx.redis.set(REDIS_PREFIX_FORGOT_PASSWORD + token, user.id, 'ex', 60 * 60 * 24) // 1 day expiration
 
-    await sendEmail(email, `http://localhost:3000/user/change-password/${token}`)
+    await sendEmail(email, `${CLIENT_URL}/auth/change-password/${token}`)
 
     return true
   }

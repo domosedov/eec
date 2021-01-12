@@ -86,8 +86,6 @@ type Profile {
 
 type Query {
   cities: [City!]!
-  getAllUsers: [User!]!
-  getUserById(id: ID = 1): User
   getUsersByRole(role: Role = GUEST): [User!]!
   hello: String!
   helloWorld: String!
@@ -101,6 +99,8 @@ type Query {
   subjects: [Subject!]!
   todo(id: ID!): Todo
   todos: [Todo!]!
+  user(id: ID = 1): User
+  users: [User!]!
   vacancies: [Vacancy!]!
 }
 
@@ -145,6 +145,8 @@ scalar Upload
 type User {
   email: EmailAddress!
   id: ID!
+  isBanned: Boolean!
+  isConfirmed: Boolean!
   login: String!
   registeredAt: DateTime!
   role: Role!

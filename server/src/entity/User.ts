@@ -35,9 +35,11 @@ export class User extends BaseEntity {
   })
   role: Role
 
+  @Field()
   @Column('bool', { default: false })
   isConfirmed: boolean;
 
+  @Field()
   @Column('bool', { default: false })
   isBanned: boolean;
 }

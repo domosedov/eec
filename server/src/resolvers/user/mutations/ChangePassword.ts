@@ -18,8 +18,6 @@ export class ChangePasswordResolver {
   ): Promise<User | null> {
     const userId = await ctx.redis.get(REDIS_PREFIX_FORGOT_PASSWORD + token)
 
-    console.log(userId)
-
     if (!userId) return null
 
     const user = await User.findOne({ where: { id: userId } })
