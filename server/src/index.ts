@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import 'dotenv-safe/config'
-import { ApolloServer, ApolloError } from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import { createConnection } from 'typeorm'
 import session from 'express-session'
@@ -11,11 +11,10 @@ import { graphqlUploadExpress } from 'graphql-upload'
 import cors from 'cors'
 
 import { createSchema } from './utils/createSchema'
+import { formatError } from './utils/formatError'
 import { __prod__, COOKIE_NAME, PUBLIC_DIR } from './constants'
 import entities from './entity'
 import up from './seed'
-import { GraphQLError, GraphQLFormattedError } from 'graphql'
-import { ArgumentValidationError } from 'type-graphql'
 
 const main = async () => {
   await createConnection({
@@ -83,21 +82,7 @@ const main = async () => {
     introspection: !__prod__,
     uploads: false,
     playground: !__prod__ ? { settings: { 'request.credentials': 'include' } } : undefined,
-    formatError: (error: GraphQLError): GraphQLFormattedError => {
-      if (error.originalError instanceof ApolloError) {
-        console.log(error.message)
-        return error
-      }
-
-      if (error.originalError instanceof ArgumentValidationError) {
-        if (error && error.extensions) {
-          error.extensions.code = 'GRAPHQL_VALIDATION_FAILED'
-        }
-        return error
-      }
-
-      return error
-    }
+    formatError
   })
 
   app.get('/', (_, res) => {
