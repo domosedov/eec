@@ -1,5 +1,12 @@
 import { buildSchema } from 'type-graphql'
 import resolvers from '../resolvers'
+import { RedisPubSub } from 'graphql-redis-subscriptions'
+import Redis from 'ioredis'
+
+const pubSub = new RedisPubSub({
+  publisher: new Redis(process.env.REDIS_URL),
+  subscriber: new Redis(process.env.REDIS_URL)
+})
 
 export const createSchema = () => buildSchema({
   resolvers,
@@ -8,5 +15,6 @@ export const createSchema = () => buildSchema({
   },
   // validate: false,
   dateScalarMode: 'isoDate',
-  emitSchemaFile: true
+  emitSchemaFile: true,
+  pubSub
 })

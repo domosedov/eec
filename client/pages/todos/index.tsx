@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import {
   useAddTodoMutation,
   useGetAllTodosQuery,
+  useNewTodoSubscription,
 } from "../../generated/graphql";
 import {
   addApolloState,
@@ -18,6 +19,16 @@ export const GET_ALL_TODOS = gql`
       title
       description
       isCompleted
+    }
+  }
+`;
+
+export const NEW_TODO = gql`
+  subscription newTodo {
+    newTodo {
+      id
+      title
+      description
     }
   }
 `;
@@ -37,6 +48,7 @@ const TodoPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { data, loading, error } = useGetAllTodosQuery();
+  const { data: subscriptionData } = useNewTodoSubscription();
   const [addTodo] = useAddTodoMutation({
     update(cache, { data }) {
       const newTodoFromResponse = data?.addTodo;
@@ -99,6 +111,10 @@ const TodoPage = () => {
             </Link>
           </li>
         ))}
+      <div>
+        <h2>Subscribe</h2>
+        <pre>{JSON.stringify(subscriptionData, null, 2)}</pre>
+      </div>
     </div>
   );
 };

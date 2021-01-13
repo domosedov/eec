@@ -1,5 +1,5 @@
 import { Todo } from '../../entity/Todo'
-import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, ID, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql'
 
 @Resolver(() => Todo)
 export class TodoResolver {
@@ -22,12 +22,27 @@ export class TodoResolver {
   @Mutation(() => Todo)
   async addTodo (
     @Arg('title') title: string,
-    @Arg('description', { nullable: true }) description: string
+    @Arg('description', { nullable: true }) description: string,
+    @PubSub('NEW_TODO') pubSub: Publisher<Todo>
   ) {
-    return await Todo.create({
+    const newTodo = await Todo.create({
       title,
       description
     }).save()
+
+    await pubSub(newTodo)
+
+    return newTodo
+  }
+
+  @Subscription(() => Todo, {
+    topics: 'NEW_TODO'
+  })
+  newTodo (
+    @Root() newTodo: Todo
+  ): Todo {
+    console.log(newTodo)
+    return newTodo
   }
 
   // @FieldResolver()
