@@ -48,7 +48,9 @@ const TodoPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { data, loading, error } = useGetAllTodosQuery();
-  const { data: subscriptionData } = useNewTodoSubscription();
+  const { data: subscriptionData } = useNewTodoSubscription({
+    skip: typeof window === "undefined",
+  });
   const [addTodo] = useAddTodoMutation({
     update(cache, { data }) {
       const newTodoFromResponse = data?.addTodo;

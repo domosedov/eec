@@ -19,7 +19,7 @@ export const APOLLO_STATE_PROP_NAME = "__APOLLO_SSR_STATE__";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
-const httplink = createUploadLink({
+const httpLink = createUploadLink({
   uri:
     process.env.NODE_ENV === "production"
       ? "https://domosedov-dev.info/graphql"
@@ -47,7 +47,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const link = process.browser
+const splitLink = process.browser
   ? split(
       ({ query }) => {
         const definition = getMainDefinition(query);
@@ -57,13 +57,13 @@ const link = process.browser
         );
       },
       wsLink!,
-      httplink
+      httpLink
     )
-  : httplink;
+  : httpLink;
 
 const createApolloClient = () => {
   return new ApolloClient({
-    link: from([errorLink, link]),
+    link: from([errorLink, splitLink]),
     cache,
     ssrMode: !__isBrowser__,
     // credentials: "include",

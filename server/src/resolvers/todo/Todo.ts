@@ -41,13 +41,6 @@ export class TodoResolver {
   newTodo (
     @Root() newTodo: Todo
   ): Todo {
-    console.log(newTodo)
     return newTodo
   }
-
-  // @FieldResolver()
-  // async user(@Root() todo: Todo) {
-  //   const usr = await User.findOne({where: { id: todo.id }});
-  //   return usr;
-  // }
 }
