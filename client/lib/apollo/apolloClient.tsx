@@ -66,7 +66,6 @@ const createApolloClient = () => {
     link: from([errorLink, splitLink]),
     cache,
     ssrMode: !__isBrowser__,
-    // credentials: "include",
   });
 };
 
