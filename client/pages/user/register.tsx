@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useState } from "react";
 import { ValidationError } from "../../types";
+import { GRAPHQL_VALIDATION_FAILED } from "../../constants";
 
 export const USER_REGISTER = gql`
   mutation UserRegister($data: RegisterInput!) {
@@ -43,7 +44,7 @@ const schema = Yup.object().shape({
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [userRegister, { loading, data }] = useUserRegisterMutation();
+  const [userRegister, { loading, data, error }] = useUserRegisterMutation();
   const {
     register,
     handleSubmit,
@@ -67,12 +68,11 @@ const RegisterPage = () => {
          */
         reset();
         // TODO: Add thank you message
-        // TODO: Добавить проверку на другие ошибки
       }
     } catch (err) {
       if (isApolloError(err)) {
         for (const gqlError of err.graphQLErrors) {
-          if (gqlError.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
+          if (gqlError.extensions?.code === GRAPHQL_VALIDATION_FAILED) {
             const validationErrors: ValidationError[] =
               gqlError.extensions?.exception?.validationErrors;
             if (Array.isArray(validationErrors)) {
@@ -92,7 +92,14 @@ const RegisterPage = () => {
     }
   };
 
-  console.log(formInputErrors);
+  if (
+    error &&
+    error.graphQLErrors.filter(
+      (gqlErr) => gqlErr.extensions?.code !== GRAPHQL_VALIDATION_FAILED
+    ).length > 0
+  ) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div>
@@ -100,9 +107,11 @@ const RegisterPage = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         Login
         <input type="text" name="login" defaultValue="" ref={register} />
+        {formInputErrors.login && <div>{formInputErrors.login.message}</div>}
         <br />
         Email
         <input type="text" name="email" defaultValue="" ref={register} />
+        {formInputErrors.email && <div>{formInputErrors.email.message}</div>}
         <br />
         Password
         <input
@@ -112,13 +121,15 @@ const RegisterPage = () => {
           ref={register}
           autoComplete="off"
         />
+        {formInputErrors.password && (
+          <div>{formInputErrors.password.message}</div>
+        )}
         <button type="button" onClick={() => setShowPassword(!showPassword)}>
           Show Password
         </button>
         <br />
         <button type="submit">Register</button>
       </form>
-      <div>{/* <pre>{JSON.stringify(formInputErrors, null, 2)}</pre> */}</div>
       <div>
         {loading && !data && <div>Loading...</div>}
         {JSON.stringify(data, null, 2)}

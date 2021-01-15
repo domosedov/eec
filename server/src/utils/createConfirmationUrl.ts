@@ -5,7 +5,13 @@ import { CLIENT_URL, REDIS_PREFIX_CONFIRM_USER } from '../constants'
 export const createConfirmationUrl = async (userId: number, redisClient: Redis) => {
   const token = uuid()
 
-  await redisClient.set(REDIS_PREFIX_CONFIRM_USER + token, userId, 'ex', 60 * 60 * 24) // 1 day expiration
+  const isOk = await redisClient.set(
+    REDIS_PREFIX_CONFIRM_USER + token,
+    userId,
+    'ex',
+    60 * 60 * 24 * 7) // 7 days expiration
 
-  return `${CLIENT_URL}/auth/confirm?token=${token}`
+  if (!isOk) throw new Error('Redis: Не удалось установить значение')
+
+  return `${CLIENT_URL}/user/confirm?token=${token}`
 }
