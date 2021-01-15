@@ -67,6 +67,7 @@ const RegisterPage = () => {
          */
         reset();
         // TODO: Add thank you message
+        // TODO: Добавить проверку на другие ошибки
       }
     } catch (err) {
       if (isApolloError(err)) {
