@@ -15,13 +15,23 @@ module.exports = {
     extend: {
       colors: {
         lime: colors.lime,
-        gray: colors.blueGray
-        
-      }
+        gray: colors.blueGray,
+      },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      ringWidth: ["focus-visible"],
+      ringColor: ["focus-visible"],
+      ringOpacity: ["focus-visible"],
+      ringOffsetWidth: ["focus-visible"],
+      ringOffsetColor: ["focus-visible"],
+      outline: ["focus-visible"],
+      textColor: ["focus-visible"],
+      backgroundColor: ["focus-visible"],
+      transform: ["focus-visible"],
+      scale: ["focus-visible"],
+    },
   },
   plugins: [],
 };

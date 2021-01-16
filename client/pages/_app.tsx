@@ -1,7 +1,7 @@
 import { AppProps } from "next/app";
 import { ThemeProvider as DarkThemeProvider } from "next-themes";
-import "../styles/tailwind.css";
 import "focus-visible";
+import "../styles/tailwind.css";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../lib/apollo/apolloClient";
 import MainLayout from "../components/layout/MainLayout";

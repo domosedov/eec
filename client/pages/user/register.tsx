@@ -11,6 +11,7 @@ import { ValidationError } from "../../types";
 import { GRAPHQL_VALIDATION_FAILED } from "../../constants";
 import TextInput from "../../components/layout/TextInput";
 import PasswordInput from "../../components/layout/PasswordInput";
+import Button from "../../components/layout/Button";
 
 export const USER_REGISTER = gql`
   mutation UserRegister($data: RegisterInput!) {
@@ -45,7 +46,6 @@ const schema = Yup.object().shape({
 });
 
 const RegisterPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [userRegister, { loading, data, error }] = useUserRegisterMutation();
   const {
     register,
@@ -94,8 +94,6 @@ const RegisterPage = () => {
     }
   };
 
-  console.log(formInputErrors);
-
   if (
     error &&
     error.graphQLErrors.filter(
@@ -133,7 +131,7 @@ const RegisterPage = () => {
           errorMessage={formInputErrors?.password?.message}
           ref={register}
         />
-        <button type="submit">Register</button>
+        <Button type="submit">Отправить</Button>
       </form>
       <div>
         {loading && !data && <div>Loading...</div>}

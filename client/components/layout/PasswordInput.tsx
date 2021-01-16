@@ -21,7 +21,7 @@ const PasswordInput = forwardRef<Ref, Props>((props, ref) => {
         {label}
       </label>
       <div
-        className={`flex w-64 rounded border-2 duration-200 outline-none focus:outline-none focus-within:ring-4 focus-within:ring-indigo-500 focus-within:border-transparent ${
+        className={`flex w-64 rounded border-2 duration-200 outline-none focus:outline-none focus-within:ring-4 focus-within:ring-lime-500 focus-within:border-transparent ${
           hasError ? "border-red-500" : "border-indigo-700"
         }`}
       >
@@ -35,12 +35,13 @@ const PasswordInput = forwardRef<Ref, Props>((props, ref) => {
         />
         <button
           type="button"
-          className="w-8 h-8 inline-flex items-center justify-center outline-none focus:outline-none bg-gray-100 dark:bg-gray-800"
+          className="w-8 h-8 inline-flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-indigo-400 outline-none focus:outline-none focus-visible:outline-none focus-visible:text-lime-500"
           onClick={() => toggle()}
+          aria-label="Toggle"
         >
           <HeroIcon
             name={showPassword ? "eye-off" : "eye"}
-            className="w-6 h-6 pointer-events-none text-indigo-300"
+            className="w-6 h-6 pointer-events-none"
             strokeWidth={2}
           />
         </button>
