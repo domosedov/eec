@@ -250,6 +250,11 @@ export type ChangePasswordInput = {
 };
 
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  newTodo: Todo;
+};
+
 export type ConfirmUserRegisterMutationVariables = Exact<{
   token: Scalars['String'];
 }>;
@@ -362,6 +367,17 @@ export type GetAllTodosQuery = (
     { __typename?: 'Todo' }
     & Pick<Todo, 'id' | 'title' | 'description' | 'isCompleted'>
   )> }
+);
+
+export type NewTodoSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewTodoSubscription = (
+  { __typename?: 'Subscription' }
+  & { newTodo: (
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'title' | 'description'>
+  ) }
 );
 
 export type AddTodoMutationVariables = Exact<{
@@ -700,6 +716,36 @@ export function useGetAllTodosLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllTodosQueryHookResult = ReturnType<typeof useGetAllTodosQuery>;
 export type GetAllTodosLazyQueryHookResult = ReturnType<typeof useGetAllTodosLazyQuery>;
 export type GetAllTodosQueryResult = Apollo.QueryResult<GetAllTodosQuery, GetAllTodosQueryVariables>;
+export const NewTodoDocument = gql`
+    subscription newTodo {
+  newTodo {
+    id
+    title
+    description
+  }
+}
+    `;
+
+/**
+ * __useNewTodoSubscription__
+ *
+ * To run a query within a React component, call `useNewTodoSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewTodoSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewTodoSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewTodoSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewTodoSubscription, NewTodoSubscriptionVariables>) {
+        return Apollo.useSubscription<NewTodoSubscription, NewTodoSubscriptionVariables>(NewTodoDocument, baseOptions);
+      }
+export type NewTodoSubscriptionHookResult = ReturnType<typeof useNewTodoSubscription>;
+export type NewTodoSubscriptionResult = Apollo.SubscriptionResult<NewTodoSubscription>;
 export const AddTodoDocument = gql`
     mutation AddTodo($title: String!, $description: String!) {
   addTodo(title: $title, description: $description) {

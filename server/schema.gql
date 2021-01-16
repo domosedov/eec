@@ -132,6 +132,10 @@ type Subject {
   name: String!
 }
 
+type Subscription {
+  newTodo: Todo!
+}
+
 type Todo {
   description: String!
   id: ID!

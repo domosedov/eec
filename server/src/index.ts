@@ -9,6 +9,7 @@ import Redis from 'ioredis'
 import path from 'path'
 import { graphqlUploadExpress } from 'graphql-upload'
 import cors from 'cors'
+import { createServer } from 'http'
 
 import { createSchema } from './utils/createSchema'
 import { formatError } from './utils/formatError'
@@ -96,7 +97,10 @@ const main = async () => {
 
   apolloServer.applyMiddleware({ app, cors: false })
 
-  app.listen(parseInt(PORT), () => {
+  const httpServer = createServer(app)
+  apolloServer.installSubscriptionHandlers(httpServer)
+
+  httpServer.listen(parseInt(PORT), () => {
     console.log(`server started on http://localhost:${PORT}/graphql`)
   })
 }

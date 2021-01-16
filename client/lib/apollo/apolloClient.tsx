@@ -1,13 +1,17 @@
 import { useMemo } from "react";
 import {
-  ApolloClient, from,
+  ApolloClient,
+  from,
   NormalizedCacheObject,
+  split,
 } from "@apollo/client";
-import { onError } from '@apollo/client/link/error'
+import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
-import {cache} from './cache'
+import { cache } from "./cache";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 const __isBrowser__ = typeof window !== "undefined";
 
@@ -23,25 +27,45 @@ const httpLink = createUploadLink({
   credentials: "include",
 });
 
+const wsLink = process.browser
+  ? new WebSocketLink({
+      uri: `ws://localhost:8080/graphql`,
+      options: {
+        reconnect: true,
+      },
+    })
+  : null;
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.map(({ message, locations, path }) =>
-        console.log(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        ),
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
     );
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const link = from([errorLink, httpLink ])
+const splitLink = process.browser
+  ? split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === "OperationDefinition" &&
+          definition.operation === "subscription"
+        );
+      },
+      wsLink!,
+      httpLink
+    )
+  : httpLink;
 
 const createApolloClient = () => {
   return new ApolloClient({
-    link,
+    link: from([errorLink, splitLink]),
     cache,
     ssrMode: !__isBrowser__,
-    // credentials: "include",
   });
 };
 

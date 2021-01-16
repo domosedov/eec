@@ -4,7 +4,7 @@ import { ArgumentValidationError } from 'type-graphql'
 
 export const formatError = (error: GraphQLError): GraphQLFormattedError => {
   if (error.originalError instanceof ApolloError) {
-    console.log(error.message)
+    console.log('err', error.message)
     return error
   }
 
