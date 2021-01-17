@@ -76,11 +76,6 @@ const CreateVacancy = () => {
         <input type="checkbox" name="city[]" ref={register} value="1" />
         <input type="checkbox" name="city[]" ref={register} value="2" />
         <input type="checkbox" name="city[]" ref={register} value="3" />
-        FOO:
-        <TextInput name="foo" hasError={!!errors.foo} ref={register} />
-        <br />
-        BAR:
-        <TextInput name="bar" hasError={!!errors.bar} ref={register} />
         {/* <input type="file" name="avatar" ref={register({})} /> */}
         <button>Submit</button>
       </form>

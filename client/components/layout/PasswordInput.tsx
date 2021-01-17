@@ -1,5 +1,5 @@
 import { forwardRef, useReducer } from "react";
-import HeroIcon from "./HeroIcon";
+import HeroIcon from "./common/HeroIcon";
 
 type Props = {
   name: string;
@@ -21,12 +21,12 @@ const PasswordInput = forwardRef<Ref, Props>((props, ref) => {
         {label}
       </label>
       <div
-        className={`flex w-64 rounded border-2 duration-200 outline-none focus:outline-none focus-within:ring-4 focus-within:ring-lime-500 focus-within:border-transparent ${
+        className={`flex w-64 border duration-200 outline-none focus:outline-none focus-within:ring-4 focus-within:ring-lime-500 focus-within:border-transparent ${
           hasError ? "border-red-500" : "border-indigo-700"
         }`}
       >
         <input
-          className="w-56 relative p-1 outline-none focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100"
+          className="w-56 relative p-1 duration-200 outline-none focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100"
           type={showPassword ? "text" : "password"}
           name={name}
           ref={ref}
@@ -48,7 +48,7 @@ const PasswordInput = forwardRef<Ref, Props>((props, ref) => {
       </div>
       <div className="relative text-xs">
         {errorMessage ? (
-          <div className="absolute top-0 left-0 w-64 rounded px-1 py-1 bg-red-500 text-white">
+          <div className="absolute top-0 left-0 w-64 rounded px-1 py-1 bg-red-500 text-white z-10">
             {errorMessage}
           </div>
         ) : null}

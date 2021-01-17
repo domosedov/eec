@@ -10,7 +10,7 @@ const Button = forwardRef<Ref, Props>(
   ({ children, type, onClick = (f) => f }, ref) => {
     return (
       <button
-        className="flex items-center px-4 py-2 uppercase rounded bg-indigo-700 text-gray-50 duration-200 outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-500"
+        className="flex items-center px-4 py-2 uppercase rounded bg-indigo-700 text-gray-50 duration-200 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-500 hover:bg-indigo-800 active:transform active:scale-95"
         type={type}
         ref={ref}
         onClick={onClick}

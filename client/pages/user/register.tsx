@@ -11,7 +11,7 @@ import { ValidationError } from "../../types";
 import { GRAPHQL_VALIDATION_FAILED } from "../../constants";
 import TextInput from "../../components/layout/TextInput";
 import PasswordInput from "../../components/layout/PasswordInput";
-import Button from "../../components/layout/Button";
+import Button from "../../components/layout/common/Button";
 
 export const USER_REGISTER = gql`
   mutation UserRegister($data: RegisterInput!) {
@@ -106,33 +106,38 @@ const RegisterPage = () => {
   return (
     <div className="container mx-auto">
       <h1>Register Page</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <TextInput
-          id="login"
-          name="login"
-          label="Логин"
-          hasError={!!formInputErrors?.login}
-          errorMessage={formInputErrors?.login?.message}
-          ref={register}
-        />
-        <TextInput
-          id="email"
-          name="email"
-          label="Email"
-          hasError={!!formInputErrors?.email}
-          errorMessage={formInputErrors?.email?.message}
-          ref={register}
-        />
-        <PasswordInput
-          id="password"
-          name="password"
-          label="Пароль"
-          hasError={!!formInputErrors?.password}
-          errorMessage={formInputErrors?.password?.message}
-          ref={register}
-        />
-        <Button type="submit">Отправить</Button>
-      </form>
+      <div className="flex items-center justify-center">
+        <form
+            className="px-4 py-4 shadow-lg bg-gray-200 dark:bg-gray-700"
+            onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+              id="login"
+              name="login"
+              label="Логин"
+              hasError={!!formInputErrors?.login}
+              errorMessage={formInputErrors?.login?.message}
+              ref={register}
+          />
+          <TextInput
+              id="email"
+              name="email"
+              label="Email"
+              hasError={!!formInputErrors?.email}
+              errorMessage={formInputErrors?.email?.message}
+              ref={register}
+          />
+          <PasswordInput
+              id="password"
+              name="password"
+              label="Пароль"
+              hasError={!!formInputErrors?.password}
+              errorMessage={formInputErrors?.password?.message}
+              ref={register}
+          />
+          <Button type="submit">Отправить</Button>
+        </form>
+      </div>
+
       <div>
         {loading && !data && <div>Loading...</div>}
         {JSON.stringify(data, null, 2)}

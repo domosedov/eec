@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 export default function Header() {
   return (
@@ -6,17 +7,18 @@ export default function Header() {
       <div className="py-2 px-4 bg-indigo-700">
         <div className="flex justify-between">
           <div>Logo</div>
-          <nav className="flex">
+          <nav className="flex gap-2">
             <Link href="/">
               <a>Home</a>
             </Link>
-            <Link href="/todos">
-              <a>Todos</a>
+            <Link href="/user/register">
+              <a>Регистрация</a>
             </Link>
             <Link href="/todos">
               <a>Todos</a>
             </Link>
           </nav>
+          <ThemeSwitcher />
         </div>
       </div>
     </header>
