@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useMeQuery } from "../generated/graphql";

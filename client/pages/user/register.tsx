@@ -9,6 +9,9 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { ValidationError } from "../../types";
 import { GRAPHQL_VALIDATION_FAILED } from "../../constants";
+import TextInput from "../../components/layout/TextInput";
+import PasswordInput from "../../components/layout/PasswordInput";
+import Button from "../../components/layout/Button";
 
 export const USER_REGISTER = gql`
   mutation UserRegister($data: RegisterInput!) {
@@ -43,7 +46,6 @@ const schema = Yup.object().shape({
 });
 
 const RegisterPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [userRegister, { loading, data, error }] = useUserRegisterMutation();
   const {
     register,
@@ -102,33 +104,34 @@ const RegisterPage = () => {
   }
 
   return (
-    <div>
+    <div className="container mx-auto">
       <h1>Register Page</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        Login
-        <input type="text" name="login" defaultValue="" ref={register} />
-        {formInputErrors.login && <div>{formInputErrors.login.message}</div>}
-        <br />
-        Email
-        <input type="text" name="email" defaultValue="" ref={register} />
-        {formInputErrors.email && <div>{formInputErrors.email.message}</div>}
-        <br />
-        Password
-        <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          defaultValue=""
+        <TextInput
+          id="login"
+          name="login"
+          label="Логин"
+          hasError={!!formInputErrors?.login}
+          errorMessage={formInputErrors?.login?.message}
           ref={register}
-          autoComplete="off"
         />
-        {formInputErrors.password && (
-          <div>{formInputErrors.password.message}</div>
-        )}
-        <button type="button" onClick={() => setShowPassword(!showPassword)}>
-          Show Password
-        </button>
-        <br />
-        <button type="submit">Register</button>
+        <TextInput
+          id="email"
+          name="email"
+          label="Email"
+          hasError={!!formInputErrors?.email}
+          errorMessage={formInputErrors?.email?.message}
+          ref={register}
+        />
+        <PasswordInput
+          id="password"
+          name="password"
+          label="Пароль"
+          hasError={!!formInputErrors?.password}
+          errorMessage={formInputErrors?.password?.message}
+          ref={register}
+        />
+        <Button type="submit">Отправить</Button>
       </form>
       <div>
         {loading && !data && <div>Loading...</div>}
