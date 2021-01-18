@@ -1,33 +1,46 @@
 import { Todo } from '../../entity/Todo'
-import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, ID, Mutation, Publisher, PubSub, Query, Resolver, Root, Subscription } from 'type-graphql'
 
 @Resolver(() => Todo)
 export class TodoResolver {
-  @Query(() => [Todo], { nullable: true })
-  async allTodos (): Promise<Todo[] | null> {
-    const todos = await Todo.find({
-      relations: ['user']
-    })
-
-    if (!todos) return null
+  @Query(() => [Todo])
+  async todos (): Promise<Todo[]> {
+    const todos = await Todo.find()
 
     return todos
   }
 
+  @Query(() => Todo, { nullable: true })
+  async todo (@Arg('id', () => ID) id: number) {
+    const todo = await Todo.findOne(id)
+
+    if (!todo) return null
+
+    return todo
+  }
+
   @Mutation(() => Todo)
-  async createTodo (
-      @Arg('title') title: string,
-      @Arg('description') description: string
+  async addTodo (
+    @Arg('title') title: string,
+    @Arg('description', { nullable: true }) description: string,
+    @PubSub('NEW_TODO') pubSub: Publisher<Todo>
   ) {
-    return await Todo.create({
+    const newTodo = await Todo.create({
       title,
       description
     }).save()
+
+    await pubSub(newTodo)
+
+    return newTodo
   }
 
-  // @FieldResolver()
-  // async user(@Root() todo: Todo) {
-  //   const usr = await User.findOne({where: { id: todo.id }});
-  //   return usr;
-  // }
+  @Subscription(() => Todo, {
+    topics: 'NEW_TODO'
+  })
+  newTodo (
+    @Root() newTodo: Todo
+  ): Todo {
+    return newTodo
+  }
 }

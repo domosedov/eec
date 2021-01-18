@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   purge: {
     content: [
@@ -10,10 +12,26 @@ module.exports = {
   },
   darkMode: "class", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        lime: colors.lime,
+        gray: colors.blueGray,
+      },
+    },
   },
   variants: {
-    extend: {},
+    extend: {
+      ringWidth: ["focus-visible"],
+      ringColor: ["focus-visible"],
+      ringOpacity: ["focus-visible"],
+      ringOffsetWidth: ["focus-visible"],
+      ringOffsetColor: ["focus-visible"],
+      outline: ["focus-visible"],
+      textColor: ["focus-visible"],
+      backgroundColor: ["focus-visible"],
+      transform: ["focus-visible", "active"],
+      scale: ["focus-visible", "active"],
+    },
   },
   plugins: [],
 };

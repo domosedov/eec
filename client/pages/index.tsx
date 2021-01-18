@@ -1,14 +1,15 @@
-import Head from "next/head";
+import {MouseEvent} from 'react'
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
-import { initializeApollo } from "../lib/apolloClient";
+import { addApolloState, initializeApollo } from "../lib/apollo/apolloClient";
+import { useGetAllUsersQuery, useLogoutMutation } from "../generated/graphql";
+import { NextSeo } from "next-seo";
 
 const GET_ALL_USERS = gql`
   query getAllUsers {
-    getAllUsers {
+    users {
+      id
       login
       email
     }
@@ -22,46 +23,31 @@ const LOGOUT = gql`
 `;
 
 export default function Home() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [logout, { client }] = useMutation(LOGOUT);
-  const { theme, setTheme } = useTheme();
+  const [logout, { client }] = useLogoutMutation();
 
-  const switchTheme = () => {
-    if (isMounted) {
-      setTheme(theme === "light" ? "dark" : "light");
-    }
-  };
-
-  const handleLogoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogoutClick = async (e: MouseEvent<HTMLButtonElement>) => {
     await logout();
-    client.resetStore();
+    await client.resetStore();
   };
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const { data, loading, error } = useQuery(GET_ALL_USERS);
+  const { data, loading, error } = useGetAllUsersQuery();
 
   if (error) return <div>Error...</div>;
 
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="bg-white text-black dark:bg-black dark:text-white">
+    <>
+      <NextSeo title="Главная" />
+      <section className="bg-white text-black dark:bg-black dark:text-white">
         <h1>Main content</h1>
-        <button className="bg-blue-500" onClick={switchTheme}>
-          Switch theme
-        </button>
 
-        <Link href="/login">
+        <Link href="/user/login">
           <a>Login Page</a>
+        </Link>
+
+        <Link href="/user/register">
+          <a>Регистрация</a>
         </Link>
 
         <Link href="/me">
@@ -78,26 +64,22 @@ export default function Home() {
         <div>
           <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
-      </main>
-
-      <footer>
-        <p>Footer</p>
-      </footer>
-    </div>
+      </section>
+    </>
   );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apolloClient = initializeApollo(undefined);
+  const apolloClient = initializeApollo();
 
   await apolloClient.query({
     query: GET_ALL_USERS,
   });
 
-  return {
+  return addApolloState(apolloClient, {
     props: {
-      initialApolloState: apolloClient.cache.extract(),
+      foo: "bar",
     },
     revalidate: 1,
-  };
+  });
 };

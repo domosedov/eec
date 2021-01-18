@@ -8,6 +8,11 @@ input ChangePasswordInput {
   token: String!
 }
 
+type City {
+  id: ID!
+  name: String!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -18,7 +23,27 @@ A field whose value conforms to the standard internet email address format as sp
 """
 scalar EmailAddress
 
+"""Пол человека"""
+enum Gender {
+  ALL
+  ANOTHER
+  MEN
+  NONE
+  WOMEN
+}
+
+type Mark {
+  id: ID!
+  name: String!
+}
+
+type Metro {
+  id: ID!
+  name: String!
+}
+
 type Mutation {
+  addTodo(description: String, title: String!): Todo!
   changePassword(data: ChangePasswordInput!): User
   confirmUser(token: String!): Boolean!
   createJopa(data: RegisterInput!): User!
@@ -29,12 +54,54 @@ type Mutation {
   uploadFile(file: Upload!): Boolean!
 }
 
+type Place {
+  id: ID!
+  name: String!
+}
+
+type Profile {
+  area: String
+  birthYear: Int!
+  careerStartYear: Int!
+  city: City!
+  createdAt: DateTime!
+  description: String
+  education: String!
+  email: String!
+  firstName: String!
+  gender: Gender!
+  hourlyRate: Int!
+  id: ID!
+  isPublished: Boolean!
+  lastName: String!
+  marks: [Mark!]!
+  metro: Metro
+  middleName: String!
+  phone: String!
+  places: [Place!]!
+  status: Status!
+  students: [Student!]!
+  subjects: [Subject!]!
+}
+
 type Query {
-  getAllUsers: [User!]!
-  getUserById(id: ID!): User
+  cities: [City!]!
+  getUsersByRole(role: Role = GUEST): [User!]!
   hello: String!
   helloWorld: String!
+  marks: [Mark!]!
   me: User
+  metros: [Metro!]!
+  places: [Place!]!
+  profiles: [Profile!]!
+  statuses: [Status!]!
+  students: [Student!]!
+  subjects: [Subject!]!
+  todo(id: ID!): Todo
+  todos: [Todo!]!
+  user(id: ID = 1): User
+  users: [User!]!
+  vacancies: [Vacancy!]!
 }
 
 input RegisterInput {
@@ -50,13 +117,63 @@ enum Role {
   TUTOR
 }
 
+type Status {
+  id: ID!
+  name: String!
+}
+
+type Student {
+  id: ID!
+  name: String!
+}
+
+type Subject {
+  id: ID!
+  name: String!
+}
+
+type Subscription {
+  newTodo: Todo!
+}
+
+type Todo {
+  description: String!
+  id: ID!
+  isCompleted: Boolean!
+  title: String!
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User {
   email: EmailAddress!
   id: ID!
+  isBanned: Boolean!
+  isConfirmed: Boolean!
   login: String!
   registeredAt: DateTime!
   role: Role!
+}
+
+type Vacancy {
+  area: String
+  city: City!
+  createdAt: DateTime!
+  description: String
+  email: String!
+  firstName: String!
+  gender: Gender!
+  goal: String!
+  hourlyRate: Int!
+  id: ID!
+  isCompleted: Boolean!
+  isPublished: Boolean!
+  lastName: String!
+  metro: Metro
+  phone: String!
+  place: Place!
+  selectedProfileId: ID
+  student: Student!
+  subject: Subject!
 }

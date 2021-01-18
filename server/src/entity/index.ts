@@ -8,5 +8,6 @@ import { Student } from './Student'
 import { Subject } from './Subject'
 import { User } from './User'
 import { Vacancy } from './Vacancy'
+import { Todo } from './Todo'
 
-export default [User, Profile, Vacancy, City, Metro, Status, Subject, Student, Place, Mark] as Function[]
+export default [User, Profile, Vacancy, City, Metro, Status, Subject, Student, Place, Mark, Todo] as Function[]

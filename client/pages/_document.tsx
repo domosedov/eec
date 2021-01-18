@@ -16,8 +16,11 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="ru">
-        <Head />
-        <body className="bg-white text-black dark:bg-black dark:text-white">
+        <Head>
+          <meta charSet="utf-8" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <body className="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
           <Main />
           <NextScript />
         </body>

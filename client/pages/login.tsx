@@ -1,7 +1,8 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ME_QUERY } from "./me";
+import { useLoginMutation } from "../generated/graphql";
 
 const LOGIN_MUTATION = gql`
   mutation Login($password: String!, $loginOrEmail: String!) {
@@ -15,9 +16,10 @@ const LOGIN_MUTATION = gql`
 `;
 
 export default function Login() {
-  const [login, { data, error }] = useMutation(LOGIN_MUTATION, {
+  const [login, { data, error }] = useLoginMutation({
     refetchQueries: [{ query: ME_QUERY }],
   });
+
   const [loginOrEmail, setLoginOrEmail] = useState("");
   const [password, setPassword] = useState("");
 

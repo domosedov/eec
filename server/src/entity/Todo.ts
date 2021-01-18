@@ -22,13 +22,4 @@ export class Todo extends BaseEntity {
   @Field()
   @Column({ default: false })
   isCompleted: boolean;
-
-  // @Field(() => User, { nullable: true })
-  // @ManyToOne(() => User, user => user.todos)
-  // user: User
-
-  // @Field(() => Int)
-  // userId (@Root() parent: Todo): number {
-  //   return parent.user.id
-  // }
 }

@@ -1,11 +1,13 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { initializeApollo } from "../lib/apolloClient";
+import { useMeQuery } from "../generated/graphql";
+import { addApolloState, initializeApollo } from "../lib/apollo/apolloClient";
 
 export const ME_QUERY = gql`
   query Me {
     me {
+      id
       login
       email
       registeredAt
@@ -15,7 +17,7 @@ export const ME_QUERY = gql`
 `;
 
 export default function MePage() {
-  const { data, error, loading } = useQuery(ME_QUERY);
+  const { data, error, loading } = useMeQuery();
 
   if (error) return <div>Error...</div>;
 
@@ -33,13 +35,9 @@ export default function MePage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apolloClient = initializeApollo(undefined);
+  const apolloClient = initializeApollo();
 
-  const headers = ctx.req.headers;
-
-  console.log(headers);
-
-  const query = await apolloClient.query({
+  await apolloClient.query({
     query: ME_QUERY,
     context: {
       headers: {
@@ -48,11 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
 
-  console.log(query);
-
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
+  return addApolloState(apolloClient, {
+    props: {},
+  });
 };

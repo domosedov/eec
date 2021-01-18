@@ -10,7 +10,7 @@ import { User } from '../entity/User'
 export class IsEmailAlreadyExistConstraint implements ValidatorConstraintInterface {
   async validate (email: string) {
     const user = await User.findOne({ where: { email } })
-    console.log('validator', user)
+
     return !user
   }
 }

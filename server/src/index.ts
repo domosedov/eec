@@ -5,14 +5,16 @@ import express from 'express'
 import { createConnection } from 'typeorm'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
+import Redis from 'ioredis'
+import path from 'path'
+import { graphqlUploadExpress } from 'graphql-upload'
 import cors from 'cors'
+import { createServer } from 'http'
 
 import { createSchema } from './utils/createSchema'
-import { graphqlUploadExpress } from 'graphql-upload'
-import path from 'path'
-import { User } from './entity/User'
-import { __prod__, COOKIE_NAME } from './constants'
-import Redis from 'ioredis'
+import { formatError } from './utils/formatError'
+import { __prod__, COOKIE_NAME, PUBLIC_DIR } from './constants'
+import entities from './entity'
 import up from './seed'
 
 const main = async () => {
@@ -23,9 +25,10 @@ const main = async () => {
     synchronize: true,
     logging: false,
     dropSchema: true,
-    entities: [User]
+    entities
   })
 
+  // Run seeds
   await up()
 
   const app = express()
@@ -40,10 +43,14 @@ const main = async () => {
 
   app.use(express.static(path.join(__dirname, 'public')))
 
-  app.use(cors({
-    credentials: true,
-    origin: __prod__ ? process.env.CORS_ORIGIN : 'http://localhost:3000'
-  }))
+  app.use(
+    cors({
+      credentials: true,
+      origin: __prod__
+        ? process.env.CORS_ORIGIN
+        : ['http://localhost:3000', 'https://studio.apollographql.com']
+    })
+  )
 
   app.use(session(
     {
@@ -75,7 +82,8 @@ const main = async () => {
     context: ({ req, res }) => ({ req, res, redis }),
     introspection: !__prod__,
     uploads: false,
-    playground: !__prod__ ? { settings: { 'request.credentials': 'include' } } : undefined
+    playground: !__prod__ ? { settings: { 'request.credentials': 'include' } } : undefined,
+    formatError
   })
 
   app.get('/', (_, res) => {
@@ -84,12 +92,15 @@ const main = async () => {
       domain: '.domosedov-dev.info',
       maxAge: 100000000
     })
-    res.sendFile(path.join(process.cwd(), 'public', 'index.html'))
+    res.sendFile(path.join(PUBLIC_DIR, 'index.html'))
   })
 
   apolloServer.applyMiddleware({ app, cors: false })
 
-  app.listen(parseInt(PORT), () => {
+  const httpServer = createServer(app)
+  apolloServer.installSubscriptionHandlers(httpServer)
+
+  httpServer.listen(parseInt(PORT), () => {
     console.log(`server started on http://localhost:${PORT}/graphql`)
   })
 }

@@ -1,1 +1,3 @@
-export default [] as const
+import { ProfileResolver } from './Profile'
+
+export default [ProfileResolver] as const

@@ -1,6 +1,7 @@
 import { join } from 'path'
 
 export const __prod__ = process.env.NODE_ENV === 'production'
+export const CLIENT_URL = __prod__ ? process.env.CLIENT_URL : 'http://localhost:3000'
 export const COOKIE_NAME = 'qid'
 export const REDIS_PREFIX_CONFIRM_USER = 'user-confirmation:'
 export const REDIS_PREFIX_FORGOT_PASSWORD = 'forgot-password:'
