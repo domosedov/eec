@@ -1,4 +1,3 @@
-import {MouseEvent} from 'react'
 import Link from "next/link";
 import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
@@ -22,10 +21,10 @@ const LOGOUT = gql`
   }
 `;
 
-export default function Home() {
+export const LandingPage = () => {
   const [logout, { client }] = useLogoutMutation();
 
-  const handleLogoutClick = async (e: MouseEvent<HTMLButtonElement>) => {
+  const handleLogoutClick = async () => {
     await logout();
     await client.resetStore();
   };
@@ -67,7 +66,7 @@ export default function Home() {
       </section>
     </>
   );
-}
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
@@ -83,3 +82,5 @@ export const getStaticProps: GetStaticProps = async () => {
     revalidate: 1,
   });
 };
+
+export default LandingPage;

@@ -15,7 +15,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <>
       <DefaultSeo {...SEO} />
       <ApolloProvider client={apolloClient}>
-        <DarkThemeProvider attribute="class" >
+        <DarkThemeProvider attribute="class">
           <MainLayout>
             <Component {...pageProps} />
           </MainLayout>

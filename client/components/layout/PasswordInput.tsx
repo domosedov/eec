@@ -57,4 +57,6 @@ const PasswordInput = forwardRef<Ref, Props>((props, ref) => {
   );
 });
 
+PasswordInput.displayName = "PasswordInput";
+
 export default PasswordInput;

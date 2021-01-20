@@ -21,4 +21,6 @@ const Button = forwardRef<Ref, Props>(
   }
 );
 
+Button.displayName = "Button";
+
 export default Button;

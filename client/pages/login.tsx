@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ME_QUERY } from "./me";
 import { useLoginMutation } from "../generated/graphql";
 
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation Login($password: String!, $loginOrEmail: String!) {
     login(password: $password, loginOrEmail: $loginOrEmail) {
       login
